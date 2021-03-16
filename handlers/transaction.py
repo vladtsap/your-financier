@@ -9,7 +9,7 @@ from utils.mongo.groups import get_groups_by_member
 from utils.mongo.transactions import add_transaction, get_transactions_by_budget
 
 
-@dp.message_handler(state='*', commands=['add_transaction'])
+@dp.message_handler(commands=['add_transaction'], state='*')
 async def add_transaction_function(message: Message):
     for budget in get_budget_by_groups([
         group.id for group in get_groups_by_member(message.from_user.id)
@@ -27,7 +27,7 @@ async def add_transaction_function(message: Message):
     await message.answer(text='done')
 
 
-@dp.message_handler(state='*', commands=['get_transactions'])
+@dp.message_handler(commands=['get_transactions'], state='*')
 async def get_transactions_function(message: Message):
     for budget in get_budget_by_groups([
         group.id for group in get_groups_by_member(message.from_user.id)

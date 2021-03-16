@@ -3,6 +3,8 @@ from datetime import datetime
 from enum import Enum
 from typing import List, Optional
 
+from aiogram.dispatcher.filters.state import StatesGroup, State
+
 
 class BudgetType(Enum):
     WEEKLY = 'weekly'
@@ -113,3 +115,14 @@ class Transaction:
             result['_id'] = self.id
 
         return result
+
+
+class MainStates(StatesGroup):
+    general = State()
+
+
+class BudgetAdding(StatesGroup):
+    name = State()
+    type = State()
+    amount = State()
+    rollover = State()
