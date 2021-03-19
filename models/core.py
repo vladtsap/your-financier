@@ -3,13 +3,14 @@ from datetime import datetime
 from enum import Enum
 from typing import List, Optional
 
-from aiogram.dispatcher.filters.state import StatesGroup, State
+from utils import texts
 
 
 class BudgetType(Enum):
     WEEKLY = 'weekly'
     MONTHLY = 'monthly'
     YEARLY = 'yearly'
+    ONE_TIME = 'one-time'
 
 
 @dataclass
@@ -42,7 +43,7 @@ class Group:
 class Budget:
     name: str
     type: BudgetType
-    start: datetime
+    start: datetime  # TODO: think about this
     amount: float
     left: float
     rollover: bool
@@ -75,6 +76,19 @@ class Budget:
 
         if self.id:
             result['_id'] = self.id
+
+        return result
+
+    @property
+    def message_view(self) -> str:
+        result = f'<b>{texts.MSG_BUDGET_NAME}:</b> {self.name}\n' \
+                 f'<b>{texts.MSG_BUDGET_TYPE}:</b> {self.type.value}\n' \
+                 f'<b>{texts.MSG_BUDGET_AMOUNT}:</b> {self.amount}\n' \
+                 f'<b>{texts.MSG_BUDGET_LEFT}:</b> {self.left}\n' \
+                 f'<b>{texts.MSG_BUDGET_ROLLOUT}:</b> {self.rollover}'
+
+        # TODO: fix type
+        # TODO: add group
 
         return result
 
@@ -116,13 +130,34 @@ class Transaction:
 
         return result
 
+    @property
+    def message_view(self) -> str:
+        from utils.mongo.budgets import MongoBudgets
+        result = f'<b>{texts.MSG_TRANSACTION_DATE}:</b> ' \
+                 f'{self.date.day}.{self.date.month}.{self.date.year}\n'
 
-class MainStates(StatesGroup):
-    general = State()
+        if self.outcome:
+            result += f'<b>{texts.MSG_TRANSACTION_OUTCOME}:</b> {self.outcome}₴\n'
+
+        if self.income:
+            result += f'<b>{texts.MSG_TRANSACTION_INCOME}:</b> {self.income}₴\n'
+
+        if self.note:
+            result += f'<b>{texts.MSG_TRANSACTION_NOTE}:</b> {self.note}\n'
+
+        budget = MongoBudgets().get_by_id(self.budget_id)
+        result += f'<b>{texts.MSG_TRANSACTION_BUDGET_NAME}:</b> {budget.name}\n'
+
+        # TODO: add spender name
+
+        return result
 
 
-class BudgetAdding(StatesGroup):
-    name = State()
-    type = State()
-    amount = State()
-    rollover = State()
+class Singleton(type):
+    _instances = {}
+
+    def __call__(cls, *args, **kwargs):
+        if cls not in cls._instances:
+            instance = super().__call__(*args, **kwargs)
+            cls._instances[cls] = instance
+        return cls._instances[cls]

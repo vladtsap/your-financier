@@ -3,23 +3,31 @@ from typing import List
 from bson import ObjectId
 
 from models.core import Budget, Transaction
-from utils.mongo import db
-
-budgets = db["budgets"]
+from utils.mongo import MongoBase
 
 
-def add_budget(budget: Budget):
-    budgets.insert_one(budget.to_dict())
+class MongoBudgets(MongoBase):
 
+    def add(self, budget: Budget):
+        self.budgets.insert_one(budget.to_dict())
 
-def get_budget_by_groups(group_ids: List[str]) -> List[Budget]:
-    return [
-        Budget.from_dict(budget_data)
-        for budget_data in budgets.find({"group_id": {"$in": group_ids}})
-    ]
+    def update_balance(self, transaction: Transaction):
+        self.budgets.update_one(
+            {"_id": ObjectId(transaction.budget_id)},
+            {"$inc": {"left": (-1 * transaction.outcome) if transaction.outcome else transaction.income}}
+        )
 
+    def get_balance(self, budget: Budget):
+        pass  # TODO
 
-def update_budget_balance(transaction: Transaction):
-    change = (-1 * transaction.outcome) if transaction.outcome else transaction.income
+    def get_by_id(self, budget_id: str) -> Budget:
+        if budget_content := self.budgets.find_one({"_id": ObjectId(budget_id)}):
+            return Budget.from_dict(budget_content)
+        else:
+            return None  # TODO: raise exception
 
-    budgets.update_one({"_id": ObjectId(transaction.budget_id)}, {"$inc": {"left": change}})
+    def get_by_groups(self, group_ids: List[str]) -> List[Budget]:
+        return [
+            Budget.from_dict(budget_data)
+            for budget_data in self.budgets.find({"group_id": {"$in": group_ids}})
+        ]
