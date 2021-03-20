@@ -4,7 +4,7 @@ from models import callbacks
 from utils import texts
 
 
-def budget_keyboard(budget_id: str):
+def budget_keyboard(budget_id: str) -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(
         inline_keyboard=[
             [
@@ -23,7 +23,7 @@ def budget_keyboard(budget_id: str):
     )
 
 
-def transaction_keyboard(transaction_id: str):
+def transaction_keyboard(transaction_id: str) -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(
         inline_keyboard=[
             [

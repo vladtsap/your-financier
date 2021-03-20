@@ -10,3 +10,9 @@ class BudgetAdding(StatesGroup):
     type = State()
     amount = State()
     rollover = State()
+
+
+class TransactionAdding(StatesGroup):
+    budget = State()
+    type = State()
+    amount = State()

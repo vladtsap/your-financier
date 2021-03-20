@@ -28,6 +28,12 @@ class MongoBudgets(MongoBase):
         else:
             return None  # TODO: raise exception
 
+    def get_by_name(self, name: str) -> Budget:
+        if budget_content := self.budgets.find_one({"name": name}):
+            return Budget.from_dict(budget_content)
+        else:
+            return None  # TODO: raise exception
+
     def get_by_groups(self, group_ids: List[str]) -> List[Budget]:
         return [
             Budget.from_dict(budget_data)

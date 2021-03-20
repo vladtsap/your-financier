@@ -32,3 +32,24 @@ budget_rollover_keyboard = ReplyKeyboardMarkup(
     resize_keyboard=True,
     one_time_keyboard=True,
 )
+
+
+def available_budgets_keyboard(budgets: list) -> ReplyKeyboardMarkup:
+    return ReplyKeyboardMarkup(
+        keyboard=[
+            [budget] for budget in budgets
+        ],
+        resize_keyboard=True,
+    )
+
+
+transaction_types_keyboard = ReplyKeyboardMarkup(
+    keyboard=[
+        [
+            KeyboardButton(texts.TRANSACTION_RECEIVE),
+            KeyboardButton(texts.TRANSACTION_SPEND)
+        ],
+    ],
+    resize_keyboard=True,
+    one_time_keyboard=True,
+)

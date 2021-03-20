@@ -98,8 +98,8 @@ class Transaction:
     budget_id: str
     member_id: int
     date: datetime
-    outcome: float = field(default=0.)
-    income: float = field(default=0.)
+    outcome: Optional[float] = field(default=0.)
+    income: Optional[float] = field(default=0.)
     note: Optional[str] = field(default=None)
     id: Optional[str] = field(default=None)
 

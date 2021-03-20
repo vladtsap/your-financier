@@ -1,3 +1,4 @@
+from dataclasses import replace
 from datetime import datetime
 
 from aiogram.dispatcher.filters import Text
@@ -5,8 +6,10 @@ from aiogram.types import Message, CallbackQuery
 
 from config import dp, bot
 from keyboards.inline import transaction_keyboard
+from keyboards.reply import start_keyboard, available_budgets_keyboard, transaction_types_keyboard
 from models import callbacks
 from models.core import Transaction
+from models.states import TransactionAdding, MainStates
 from utils import texts
 from utils.mongo import (
     MongoGroups,
@@ -14,24 +17,71 @@ from utils.mongo import (
     MongoTransactions,
 )
 
+transaction_in_process = {}  # id-to-transaction  # TODO: move to redis
+
 
 @dp.message_handler(text=texts.ADD_TRANSACTION, state='*')
 async def add_transaction_function(message: Message):
-    budgets = MongoBudgets()
-    for budget in budgets.get_by_groups([
+    budgets = [budget.name for budget in MongoBudgets().get_by_groups([
         group.id for group in MongoGroups().get_by_member(message.from_user.id)
-    ]):
-        transaction = Transaction(
-            budget_id=budget.id,
-            member_id=message.from_user.id,
-            date=datetime.now(),
-            outcome=10,
-        )
+    ])]
 
-        MongoTransactions().add(transaction)
-        budgets.update_balance(transaction)
+    if not budgets:
+        await message.answer(texts.NO_BUDGETS)
+        await MainStates.general.set()
+        return
 
-    await message.answer(text='done')
+    await TransactionAdding.budget.set()
+    await message.answer(
+        text=texts.SELECT_TRANSACTION_BUDGET,
+        reply_markup=available_budgets_keyboard(budgets),
+    )
+
+
+@dp.message_handler(state=TransactionAdding.budget)
+async def add_budget_type(message: Message):
+    transaction_in_process[message.from_user.id] = {
+        'budget_id': MongoBudgets().get_by_name(message.text).id
+    }
+
+    await TransactionAdding.type.set()
+    await message.answer(
+        text=texts.ENTER_TRANSACTION_TYPE,
+        reply_markup=transaction_types_keyboard,
+    )
+
+
+@dp.message_handler(state=TransactionAdding.type)
+async def add_budget_type(message: Message):
+    transaction_in_process[message.from_user.id]['spend'] = message.text == texts.TRANSACTION_SPEND
+
+    await TransactionAdding.amount.set()
+    await message.answer(texts.ENTER_TRANSACTION_AMOUNT)
+
+
+@dp.message_handler(state=TransactionAdding.amount)
+async def adding_transaction(message: Message):
+    transaction_content = transaction_in_process.pop(message.from_user.id)
+
+    transaction = Transaction(
+        budget_id=transaction_content['budget_id'],
+        member_id=message.from_user.id,
+        date=datetime.now(),
+    )
+
+    if transaction_content['spend']:
+        transaction = replace(transaction, outcome=float(message.text))
+    else:
+        transaction = replace(transaction, income=float(message.text))
+
+    MongoTransactions().add(transaction)
+    MongoBudgets().update_balance(transaction)
+
+    await MainStates.general.set()
+    await message.answer(
+        text=texts.TRANSACTION_ADDED,
+        reply_markup=start_keyboard,
+    )
 
 
 @dp.message_handler(text=texts.VIEW_TRANSACTIONS, state='*')
