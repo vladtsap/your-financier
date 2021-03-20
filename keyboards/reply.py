@@ -9,7 +9,7 @@ from utils import texts
 start_keyboard = ReplyKeyboardMarkup(
     keyboard=[
         [KeyboardButton(texts.ADD_BUDGET), KeyboardButton(texts.ADD_TRANSACTION)],
-        [KeyboardButton(texts.VIEW_BUDGETS), KeyboardButton(texts.VIEW_TRANSACTION)],
+        [KeyboardButton(texts.VIEW_BUDGETS), KeyboardButton(texts.VIEW_TRANSACTIONS)],
     ],
     resize_keyboard=True,
 )
@@ -25,7 +25,7 @@ budget_types_keyboard = ReplyKeyboardMarkup(
     one_time_keyboard=True,
 )
 
-budget_rollover = ReplyKeyboardMarkup(
+budget_rollover_keyboard = ReplyKeyboardMarkup(
     keyboard=[
         [KeyboardButton(texts.DO_ROLLOVER), KeyboardButton(texts.DO_NOT_ROLLOVER)],
     ],

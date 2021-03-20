@@ -5,7 +5,7 @@ from keyboards.reply import start_keyboard
 from models.core import Group
 from models.states import MainStates
 from utils import texts
-from utils.mongo.groups import MongoGroups
+from utils.mongo import MongoGroups
 
 
 @dp.message_handler(commands=['start'], state='*')

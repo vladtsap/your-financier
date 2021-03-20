@@ -11,11 +11,23 @@ ENTER_BUDGET_ROLLOVER = 'Чи варто переносити кошти з по
 BUDGET_ADDED = 'Бюджет додано 🎉\n\n' \
                'Додай свою першу транзакцію до цього бюджету'
 
-#  button texts
+# reply button texts
 ADD_BUDGET = 'Додати бюджет'
 VIEW_BUDGETS = 'Переглянути бюджети'
 ADD_TRANSACTION = 'Додати транзакцію'
-VIEW_TRANSACTION = 'Переглянути транзакції'
+VIEW_TRANSACTIONS = 'Переглянути транзакції'
+
+# inline button texts
+REMOVE_BUDGET = 'Видалити бюджет'
+VIEW_TRANSACTIONS_OF_BUDGET = 'Переглянути транзакції'
+REMOVE_TRANSACTION = 'Видалити транзакцію'
+TRANSFER_INTO_ANOTHER_BUDGET = 'Перемістити в інший бюджет'
+
+# callback answers
+BUDGET_REMOVED = 'Бюджет видалено'
+TRANSACTION_REMOVED = 'Транзакцію видалено'
+YOUR_TRANSACTIONS_OF_BUDGET = '👇 Ось транзакції бюджету:'
+
 
 # budget types
 WEEKLY = 'тижневий'
@@ -40,5 +52,3 @@ MSG_TRANSACTION_OUTCOME = 'Витрата'
 MSG_TRANSACTION_INCOME = 'Прибуток'
 MSG_TRANSACTION_NOTE = 'Примітка'
 MSG_TRANSACTION_BUDGET_NAME = 'Назва бюджету'
-
-

@@ -1,19 +1,24 @@
 from datetime import datetime
 
-from aiogram.types import Message
+from aiogram.dispatcher.filters import Text
+from aiogram.types import Message, CallbackQuery
 
-from config import dp
+from config import dp, bot
+from keyboards.inline import budget_keyboard
 from keyboards.reply import (
     start_keyboard,
     remove_keyboard,
     budget_types_keyboard,
-    budget_rollover,
+    budget_rollover_keyboard,
 )
+from models import callbacks
 from models.core import Budget, BudgetType
 from models.states import MainStates, BudgetAdding
 from utils import texts
-from utils.mongo.budgets import MongoBudgets
-from utils.mongo.groups import MongoGroups
+from utils.mongo import (
+    MongoGroups,
+    MongoBudgets,
+)
 
 budget_in_process = {}  # id-to-budget  # TODO: move to redis
 
@@ -63,7 +68,7 @@ async def add_budget_amount(message: Message):
         await BudgetAdding.rollover.set()
         await message.answer(
             text=texts.ENTER_BUDGET_ROLLOVER,
-            reply_markup=budget_rollover,
+            reply_markup=budget_rollover_keyboard,
         )
 
 
@@ -101,4 +106,25 @@ async def get_budgets_function(message: Message):
     for budget in MongoBudgets().get_by_groups([
         group.id for group in MongoGroups().get_by_member(message.from_user.id)
     ]):
-        await message.answer(budget.message_view)
+        await message.answer(
+            text=budget.message_view,
+            reply_markup=budget_keyboard(budget.id),
+        )
+
+
+@dp.callback_query_handler(Text(startswith=callbacks.REMOVE_BUDGET[:2]), state='*')
+async def remove_budget(callback: CallbackQuery):
+    try:
+        action, budget_id = callback.data.split('-')
+    except ValueError:
+        # TODO: log failure
+        return
+
+    MongoBudgets().remove(budget_id)
+
+    await bot.delete_message(
+        chat_id=callback.from_user.id,
+        message_id=callback.message.message_id,
+    )
+
+    await callback.answer(texts.BUDGET_REMOVED, show_alert=True)

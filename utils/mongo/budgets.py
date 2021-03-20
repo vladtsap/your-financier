@@ -3,7 +3,7 @@ from typing import List
 from bson import ObjectId
 
 from models.core import Budget, Transaction
-from utils.mongo import MongoBase
+from utils.mongo.core import MongoBase
 
 
 class MongoBudgets(MongoBase):
@@ -11,14 +11,16 @@ class MongoBudgets(MongoBase):
     def add(self, budget: Budget):
         self.budgets.insert_one(budget.to_dict())
 
-    def update_balance(self, transaction: Transaction):
+    def update_balance(self, transaction: Transaction, on_removing: bool = False):
+        change = (-1 * transaction.outcome) if transaction.outcome else transaction.income
+
+        if on_removing:
+            change *= -1
+
         self.budgets.update_one(
             {"_id": ObjectId(transaction.budget_id)},
-            {"$inc": {"left": (-1 * transaction.outcome) if transaction.outcome else transaction.income}}
+            {"$inc": {"left": change}}
         )
-
-    def get_balance(self, budget: Budget):
-        pass  # TODO
 
     def get_by_id(self, budget_id: str) -> Budget:
         if budget_content := self.budgets.find_one({"_id": ObjectId(budget_id)}):
@@ -31,3 +33,8 @@ class MongoBudgets(MongoBase):
             Budget.from_dict(budget_data)
             for budget_data in self.budgets.find({"group_id": {"$in": group_ids}})
         ]
+
+    def remove(self, budget_id: str):
+        self.budgets.find_one_and_delete({"_id": ObjectId(budget_id)})
+
+        # TODO: handle remove transactions on removing budgets

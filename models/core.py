@@ -132,7 +132,7 @@ class Transaction:
 
     @property
     def message_view(self) -> str:
-        from utils.mongo.budgets import MongoBudgets
+        from utils.mongo import MongoBudgets
         result = f'<b>{texts.MSG_TRANSACTION_DATE}:</b> ' \
                  f'{self.date.day}.{self.date.month}.{self.date.year}\n'
 

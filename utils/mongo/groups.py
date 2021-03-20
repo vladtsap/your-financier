@@ -1,7 +1,7 @@
 from typing import List
 
 from models.core import Group
-from utils.mongo import MongoBase
+from utils.mongo.core import MongoBase
 
 
 class MongoGroups(MongoBase):
