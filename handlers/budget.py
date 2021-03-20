@@ -79,7 +79,7 @@ async def add_budget_rollover(message: Message):
 
 
 async def adding_budget(message: Message):
-    group = MongoGroups().get_by_member(message.from_user.id)[0]  # TODO: workaround
+    group = MongoGroups().get_by_member(message.from_user.id)[0]  # TODO: workaround for solo user
     budget_content = budget_in_process.pop(message.from_user.id)
 
     budget = Budget(
@@ -103,9 +103,15 @@ async def adding_budget(message: Message):
 
 @dp.message_handler(text=texts.VIEW_BUDGETS, state='*')
 async def get_budgets_function(message: Message):
-    for budget in MongoBudgets().get_by_groups([
+    budgets = MongoBudgets().get_by_groups([
         group.id for group in MongoGroups().get_by_member(message.from_user.id)
-    ]):
+    ])
+
+    if not budgets:
+        await message.answer(texts.NO_BUDGETS)
+        return
+
+    for budget in budgets:
         await message.answer(
             text=budget.message_view,
             reply_markup=budget_keyboard(budget.id),

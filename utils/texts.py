@@ -52,3 +52,6 @@ MSG_TRANSACTION_OUTCOME = 'Витрата'
 MSG_TRANSACTION_INCOME = 'Прибуток'
 MSG_TRANSACTION_NOTE = 'Примітка'
 MSG_TRANSACTION_BUDGET_NAME = 'Назва бюджету'
+
+NO_BUDGETS = 'Зараз у тебе немає бюджетів'
+NO_TRANSACTIONS = 'Зараз у тебе немає транзакцій'

@@ -36,14 +36,23 @@ async def add_transaction_function(message: Message):
 
 @dp.message_handler(text=texts.VIEW_TRANSACTIONS, state='*')
 async def get_transactions_function(message: Message):
-    for budget in MongoBudgets().get_by_groups([
-        group.id for group in MongoGroups().get_by_member(message.from_user.id)
-    ]):
-        for transaction in MongoTransactions().get_by_budget(budget.id):
-            await message.answer(
-                text=transaction.message_view,
-                reply_markup=transaction_keyboard(transaction.id),
-            )
+    transactions = [
+        transaction
+        for budget in MongoBudgets().get_by_groups([
+            group.id for group in MongoGroups().get_by_member(message.from_user.id)
+        ])
+        for transaction in MongoTransactions().get_by_budget(budget.id)
+    ]
+
+    if not transactions:
+        await message.answer(texts.NO_TRANSACTIONS)
+        return
+
+    for transaction in transactions:
+        await message.answer(
+            text=transaction.message_view,
+            reply_markup=transaction_keyboard(transaction.id),
+        )
 
 
 @dp.callback_query_handler(Text(startswith=callbacks.REMOVE_TRANSACTION[:2]), state='*')
