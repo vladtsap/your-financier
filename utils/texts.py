@@ -20,8 +20,8 @@ VIEW_TRANSACTIONS = 'Переглянути транзакції'
 # inline button texts
 REMOVE_BUDGET = 'Видалити бюджет'
 VIEW_TRANSACTIONS_OF_BUDGET = 'Переглянути транзакції'
-REMOVE_TRANSACTION = 'Видалити транзакцію'
-TRANSFER_INTO_ANOTHER_BUDGET = 'Перемістити в інший бюджет'
+REMOVE_TRANSACTION = '🗑 Видалити'
+TRANSFER_INTO_ANOTHER_BUDGET = 'Перемістити ➡️'
 
 # callback answers
 BUDGET_REMOVED = 'Бюджет видалено'

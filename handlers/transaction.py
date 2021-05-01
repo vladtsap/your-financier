@@ -3,6 +3,7 @@ from datetime import datetime
 
 from aiogram.dispatcher.filters import Text
 from aiogram.types import Message, CallbackQuery
+from pytz import timezone
 
 from config import dp, bot
 from keyboards.inline import transaction_keyboard
@@ -66,7 +67,7 @@ async def adding_transaction(message: Message):
     transaction = Transaction(
         budget_id=transaction_content['budget_id'],
         member_id=message.from_user.id,
-        date=datetime.now(),
+        date=datetime.now(timezone('Europe/Kiev')),
     )
 
     if transaction_content['spend']:

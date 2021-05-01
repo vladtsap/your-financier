@@ -24,8 +24,6 @@ services:
     ports: # only for debug
       - "6379:6379"
 
-# TODO: add bot to container
-
 
 volumes:
   mongo-data:

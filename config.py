@@ -4,7 +4,7 @@ from aiogram import Bot, Dispatcher, types
 from aiogram.contrib.fsm_storage.redis import RedisStorage2
 from envparse import env
 
-TELEGRAM_TOKEN = env.str("TELEGRAM_TOKEN", default='1594794180:AAF9xVlstCdoSzwQKyAxacscXtGS6bz50PU')  # TODO: revoke
+TELEGRAM_TOKEN = env.str("TELEGRAM_TOKEN", default='1594794180:AAF9xVlstCdoSzwQKyAxacscXtGS6bz50PU')
 
 REDIS_HOST = env.str("REDIS_HOST", default='localhost')
 REDIS_PORT = env.int("REDIS_PORT", default=6379)

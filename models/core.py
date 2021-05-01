@@ -134,13 +134,14 @@ class Transaction:
     def message_view(self) -> str:
         from utils.mongo import MongoBudgets
         result = f'<b>{texts.MSG_TRANSACTION_DATE}:</b> ' \
-                 f'{self.date.day}.{self.date.month}.{self.date.year}\n'
+                 f'{self.date.day:02}.{self.date.month:02} ' \
+                 f'{self.date.hour:02}:{self.date.minute:02}\n'
 
         if self.outcome:
-            result += f'<b>{texts.MSG_TRANSACTION_OUTCOME}:</b> {self.outcome}₴\n'
+            result += f'<b>{texts.MSG_TRANSACTION_OUTCOME}:</b> {self.outcome:.2f}₴\n'
 
         if self.income:
-            result += f'<b>{texts.MSG_TRANSACTION_INCOME}:</b> {self.income}₴\n'
+            result += f'<b>{texts.MSG_TRANSACTION_INCOME}:</b> {self.income:.2f}₴\n'
 
         if self.note:
             result += f'<b>{texts.MSG_TRANSACTION_NOTE}:</b> {self.note}\n'

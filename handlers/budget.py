@@ -2,6 +2,7 @@ from datetime import datetime
 
 from aiogram.dispatcher.filters import Text
 from aiogram.types import Message, CallbackQuery
+from pytz import timezone
 
 from config import dp, bot
 from keyboards.inline import budget_keyboard
@@ -98,7 +99,7 @@ async def adding_budget(message: Message):
     budget = Budget(
         name=budget_content['name'],
         type=BudgetType(budget_content['type']),
-        start=datetime.now(),
+        start=datetime.now(timezone('Europe/Kiev')),
         amount=float(budget_content['amount']),
         left=float(budget_content['amount']),
         rollover=budget_content.get('rollover', 'False') == 'True',
