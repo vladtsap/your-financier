@@ -138,10 +138,10 @@ class Transaction:
                  f'{self.date.hour:02}:{self.date.minute:02}\n'
 
         if self.outcome:
-            result += f'<b>{texts.MSG_TRANSACTION_OUTCOME}:</b> {self.outcome:.2f}₴\n'
+            result += f'<b>{texts.MSG_TRANSACTION_OUTCOME}:</b> {self.outcome:,.2f}₴\n'
 
         if self.income:
-            result += f'<b>{texts.MSG_TRANSACTION_INCOME}:</b> {self.income:.2f}₴\n'
+            result += f'<b>{texts.MSG_TRANSACTION_INCOME}:</b> {self.income:,.2f}₴\n'
 
         if self.note:
             result += f'<b>{texts.MSG_TRANSACTION_NOTE}:</b> {self.note}\n'

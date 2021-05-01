@@ -151,3 +151,27 @@ async def show_transactions_of_budget(callback: CallbackQuery):
         )
 
     await callback.answer('👍')  # TODO
+
+
+@dp.callback_query_handler(Text(startswith=callbacks.ADD_TRANSACTION_TO_BUDGET[:2]), state='*')
+async def add_transaction_to_budget(callback: CallbackQuery):
+    try:
+        action, budget_id = callback.data.split('-')
+    except ValueError:
+        # TODO: log failure
+        return
+    else:
+        await callback.answer('👍')  # TODO
+
+    RedisTransaction().add(
+        user_id=callback.from_user.id,
+        key='budget_id',
+        value=budget_id,
+    )
+
+    await TransactionAdding.type.set()
+    await bot.send_message(
+        chat_id=callback.from_user.id,
+        text=texts.ENTER_TRANSACTION_TYPE,
+        reply_markup=transaction_types_keyboard,
+    )

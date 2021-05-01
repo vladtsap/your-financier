@@ -18,8 +18,9 @@ ADD_TRANSACTION = 'Додати транзакцію'
 VIEW_TRANSACTIONS = 'Переглянути транзакції'
 
 # inline button texts
-REMOVE_BUDGET = 'Видалити бюджет'
-VIEW_TRANSACTIONS_OF_BUDGET = 'Переглянути транзакції'
+REMOVE_BUDGET = '🗑 Видалити'
+VIEW_TRANSACTIONS_OF_BUDGET = 'Транзакції 🧾'
+ADD_TRANSACTION_TO_BUDGET = '📤 Додати транзакцію'
 REMOVE_TRANSACTION = '🗑 Видалити'
 TRANSFER_INTO_ANOTHER_BUDGET = 'Перемістити ➡️'
 

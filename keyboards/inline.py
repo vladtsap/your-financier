@@ -11,13 +11,17 @@ def budget_keyboard(budget_id: str) -> InlineKeyboardMarkup:
                 InlineKeyboardButton(
                     text=texts.REMOVE_BUDGET,
                     callback_data=callbacks.REMOVE_BUDGET.format(budget_id=budget_id),
-                )
-            ],
-            [
+                ),
                 InlineKeyboardButton(
                     text=texts.VIEW_TRANSACTIONS_OF_BUDGET,
                     callback_data=callbacks.VIEW_TRANSACTIONS_OF_BUDGET.format(budget_id=budget_id),
-                )
+                ),
+            ],
+            [
+                InlineKeyboardButton(
+                    text=texts.ADD_TRANSACTION_TO_BUDGET,
+                    callback_data=callbacks.ADD_TRANSACTION_TO_BUDGET.format(budget_id=budget_id),
+                ),
             ],
         ]
     )
@@ -34,7 +38,7 @@ def transaction_keyboard(transaction_id: str) -> InlineKeyboardMarkup:
                 InlineKeyboardButton(
                     text=texts.TRANSFER_INTO_ANOTHER_BUDGET,
                     callback_data=callbacks.TRANSFER_INTO_ANOTHER_BUDGET.format(transaction_id=transaction_id),
-                )
-            ]
+                ),
+            ],
         ]
     )
