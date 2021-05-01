@@ -17,8 +17,7 @@ from utils.mongo import (
     MongoBudgets,
     MongoTransactions,
 )
-
-transaction_in_process = {}  # id-to-transaction  # TODO: move to redis
+from utils.redis import RedisTransaction
 
 
 @dp.message_handler(text=texts.ADD_TRANSACTION, state='*')
@@ -41,9 +40,11 @@ async def add_transaction_function(message: Message):
 
 @dp.message_handler(state=TransactionAdding.budget)
 async def add_budget_type(message: Message):
-    transaction_in_process[message.from_user.id] = {
-        'budget_id': MongoBudgets().get_by_name(message.text).id
-    }
+    RedisTransaction().add(
+        user_id=message.from_user.id,
+        key='budget_id',
+        value=MongoBudgets().get_by_name(message.text).id,
+    )
 
     await TransactionAdding.type.set()
     await message.answer(
@@ -54,7 +55,11 @@ async def add_budget_type(message: Message):
 
 @dp.message_handler(state=TransactionAdding.type)
 async def add_budget_type(message: Message):
-    transaction_in_process[message.from_user.id]['spend'] = message.text == texts.TRANSACTION_SPEND
+    RedisTransaction().add(
+        user_id=message.from_user.id,
+        key='spend',
+        value=str(message.text == texts.TRANSACTION_SPEND),
+    )
 
     await TransactionAdding.amount.set()
     await message.answer(texts.ENTER_TRANSACTION_AMOUNT)
@@ -62,7 +67,7 @@ async def add_budget_type(message: Message):
 
 @dp.message_handler(state=TransactionAdding.amount)
 async def adding_transaction(message: Message):
-    transaction_content = transaction_in_process.pop(message.from_user.id)
+    transaction_content = RedisTransaction().pop(message.from_user.id)
 
     transaction = Transaction(
         budget_id=transaction_content['budget_id'],
@@ -70,7 +75,7 @@ async def adding_transaction(message: Message):
         date=datetime.now(timezone('Europe/Kiev')),
     )
 
-    if transaction_content['spend']:
+    if transaction_content['spend'] == 'True':
         transaction = replace(transaction, outcome=float(message.text))
     else:
         transaction = replace(transaction, income=float(message.text))

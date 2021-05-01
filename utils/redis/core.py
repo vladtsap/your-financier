@@ -13,6 +13,17 @@ class RedisBase(metaclass=Singleton):
             db=db,
         )
 
+    def add(self, user_id: int, key: str, value: str):
+        self.db.hset(user_id, key, value)
+
+    def get(self, user_id: int, key: str) -> str:
+        return self.db.hget(user_id, key).decode('utf-8')
+
+    def pop(self, user_id: int) -> dict:
+        data = self._decode_dict(self.db.hgetall(user_id))
+        self.db.hdel(user_id, *data.keys())
+        return data
+
     @staticmethod
     def _decode_dict(d: dict):
         return {k.decode('utf-8'): v.decode('utf-8') for k, v in d.items()}
