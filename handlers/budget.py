@@ -16,13 +16,6 @@ from utils import texts
 from utils.mongo import MongoGroup, MongoBudget
 from utils.redis import RedisBudget
 
-text_to_budget_type = {
-    texts.WEEKLY: BudgetType.WEEKLY.value,
-    texts.MONTHLY: BudgetType.MONTHLY.value,
-    texts.YEARLY: BudgetType.YEARLY.value,
-    texts.ONE_TIME: BudgetType.ONE_TIME.value,
-}
-
 
 @dp.message_handler(text=texts.ADD_BUDGET, state='*')
 async def add_budget_function(message: Message):
@@ -52,7 +45,7 @@ async def add_budget_type(message: Message):
     RedisBudget().add(
         user_id=message.from_user.id,
         key='type',
-        value=text_to_budget_type[message.text],
+        value=BudgetType(message.text).value,
     )
     await BudgetAdding.amount.set()
     await message.answer(texts.ENTER_BUDGET_AMOUNT)

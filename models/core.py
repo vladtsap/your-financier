@@ -9,10 +9,25 @@ from utils import texts
 
 
 class BudgetType(Enum):
-    WEEKLY = 'weekly'
-    MONTHLY = 'monthly'
-    YEARLY = 'yearly'
-    ONE_TIME = 'one-time'
+    WEEKLY = ('weekly', texts.WEEKLY)
+    MONTHLY = ('monthly', texts.MONTHLY)
+    YEARLY = ('yearly', texts.MONTHLY)
+    ONE_TIME = ('one-time', texts.ONE_TIME)
+
+    @property
+    def value(self):
+        return super().value[0]
+
+    @property
+    def verbose_name(self):
+        return super().value[1]
+
+    @classmethod
+    def _missing_(cls, key):
+        for item in cls:
+            if item.value == key or item.verbose_name == key:
+                return item
+        return super()._missing_(key)
 
 
 @dataclass
@@ -113,7 +128,7 @@ class Budget:
     def message_view(self) -> str:
 
         result = f'💰 <b>{self.name}</b> — {self.amount:,.2f}₴\n' \
-                 f'<b>{texts.MSG_BUDGET_TYPE}:</b> {self.type.value}\n' \
+                 f'<b>{texts.MSG_BUDGET_TYPE}:</b> {self.type.verbose_name}\n' \
                  f'<b>{texts.MSG_BUDGET_LEFT_PERIOD}:</b> {self.left:,.2f}₴\n'
 
         if self.type != BudgetType.ONE_TIME:
