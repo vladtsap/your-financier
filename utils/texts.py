@@ -33,7 +33,7 @@ YOUR_TRANSACTIONS_OF_BUDGET = '👇 Ось транзакції бюджету:'
 WEEKLY = 'тижневий'
 MONTHLY = 'місячний'
 YEARLY = 'річний'
-ONE_TIME = 'одноразований'
+ONE_TIME = 'одноразовий'
 
 # budget rollover
 DO_ROLLOVER = 'так'
@@ -44,13 +44,6 @@ MSG_BUDGET_TYPE = 'Тип'
 MSG_BUDGET_LEFT_PERIOD = 'До кінця періоду'
 MSG_BUDGET_LEFT_TODAY = 'На сьогодні'
 MSG_BUDGET_ROLLOUT = 'Перенесення'
-
-# transaction message view
-MSG_TRANSACTION_DATE = 'Дата'
-MSG_TRANSACTION_OUTCOME = 'Витрата'
-MSG_TRANSACTION_INCOME = 'Прибуток'
-MSG_TRANSACTION_NOTE = 'Примітка'
-MSG_TRANSACTION_BUDGET_NAME = 'Назва бюджету'
 
 NO_BUDGETS = 'Зараз у тебе немає бюджетів'
 NO_TRANSACTIONS = 'Зараз у тебе немає транзакцій'
