@@ -131,7 +131,7 @@ class Transaction:
     date: datetime
     outcome: Optional[float] = field(default=0.)
     income: Optional[float] = field(default=0.)
-    note: Optional[str] = field(default=None)
+    category: Optional[str] = field(default=None)
     id: Optional[str] = field(default=None)
 
     @classmethod
@@ -142,7 +142,7 @@ class Transaction:
             date=datetime.fromisoformat(data['date']),
             outcome=data.get('outcome', 0.),
             income=data.get('income', 0.),
-            note=data.get('note'),
+            category=data.get('category'),
             id=str(data.get('_id')),
         )
 
@@ -153,7 +153,7 @@ class Transaction:
             'date': self.date.isoformat(),
             'outcome': self.outcome,
             'income': self.income,
-            'note': self.note,
+            'category': self.category,
         }
 
         if self.id:
@@ -175,8 +175,8 @@ class Transaction:
         budget = MongoBudget().get_by_id(self.budget_id)
         result += f'💰 {budget.name}\n'
 
-        if self.note:
-            result += f'🏷 {self.note}\n'
+        if self.category:
+            result += f'🏷 {self.category}\n'
 
         return result
 
