@@ -22,3 +22,6 @@ class MongoTransactions(MongoBase):
             return Transaction.from_dict(transaction_content)
         else:
             return None  # TODO: raise exception
+
+    def remove_all_in_budget(self, budget_id: str):
+        self.transactions.delete_many({"budget_id": budget_id})

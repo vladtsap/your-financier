@@ -41,6 +41,6 @@ class MongoBudgets(MongoBase):
         ]
 
     def remove(self, budget_id: str):
+        from utils.mongo import MongoTransactions
         self.budgets.find_one_and_delete({"_id": ObjectId(budget_id)})
-
-        # TODO: handle remove transactions on removing budgets
+        MongoTransactions().remove_all_in_budget(budget_id)
