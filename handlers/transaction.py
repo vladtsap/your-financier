@@ -150,7 +150,7 @@ async def show_transactions_of_budget(callback: CallbackQuery):
             reply_markup=transaction_keyboard(transaction.id),
         )
 
-    await callback.answer('👍')  # TODO
+    await callback.answer('👍')
 
 
 @dp.callback_query_handler(Text(startswith=callbacks.ADD_TRANSACTION_TO_BUDGET[:2]), state='*')
@@ -161,7 +161,7 @@ async def add_transaction_to_budget(callback: CallbackQuery):
         # TODO: log failure
         return
     else:
-        await callback.answer('👍')  # TODO
+        await callback.answer('👍')
 
     RedisTransaction().add(
         user_id=callback.from_user.id,

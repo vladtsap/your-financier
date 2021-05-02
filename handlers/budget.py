@@ -1,8 +1,5 @@
-from datetime import datetime
-
 from aiogram.dispatcher.filters import Text
 from aiogram.types import Message, CallbackQuery
-from pytz import timezone
 
 from config import dp, bot
 from keyboards.inline import budget_keyboard
@@ -16,10 +13,7 @@ from models import callbacks
 from models.core import Budget, BudgetType
 from models.states import MainStates, BudgetAdding
 from utils import texts
-from utils.mongo import (
-    MongoGroup,
-    MongoBudget,
-)
+from utils.mongo import MongoGroup, MongoBudget
 from utils.redis import RedisBudget
 
 text_to_budget_type = {
@@ -99,7 +93,6 @@ async def adding_budget(message: Message):
     budget = Budget(
         name=budget_content['name'],
         type=BudgetType(budget_content['type']),
-        start=datetime.now(timezone('Europe/Kiev')),
         amount=float(budget_content['amount']),
         left=float(budget_content['amount']),
         rollover=budget_content.get('rollover', 'False') == 'True',

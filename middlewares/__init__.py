@@ -8,4 +8,4 @@ from middlewares.admin_only import AccessMiddleware
 def setup(dp: Dispatcher):
     dp.middleware.setup(LoggingMiddleware())
     dp.middleware.setup(ThrottlingMiddleware())
-    dp.middleware.setup(AccessMiddleware(148111610))  # TODO: remove before release
+    dp.middleware.setup(AccessMiddleware(148111610))

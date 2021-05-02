@@ -40,10 +40,9 @@ DO_ROLLOVER = 'так'
 DO_NOT_ROLLOVER = 'ні'
 
 # budget message view
-MSG_BUDGET_NAME = 'Назва'
 MSG_BUDGET_TYPE = 'Тип'
-MSG_BUDGET_AMOUNT = 'Сума бюджету'
-MSG_BUDGET_LEFT = 'Залишок'
+MSG_BUDGET_LEFT_PERIOD = 'До кінця періоду'
+MSG_BUDGET_LEFT_TODAY = 'На сьогодні'
 MSG_BUDGET_ROLLOUT = 'Перенесення'
 
 # transaction message view

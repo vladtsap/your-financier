@@ -17,6 +17,11 @@ class MongoTransaction(MongoBase):
             for budget_data in self.transactions.find({"budget_id": budget_id})
         ]
 
+    def get_all_for_today_by_budget(self, budget_id: str) -> List[Transaction]:
+        if not budget_id:
+            pass  # TODO: raise exception
+        pass  # TODO
+
     def remove(self, transaction_id: str) -> Transaction:
         if transaction_content := self.transactions.find_one_and_delete({"_id": ObjectId(transaction_id)}):
             return Transaction.from_dict(transaction_content)

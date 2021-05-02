@@ -1,7 +1,9 @@
 from dataclasses import dataclass, field
-from datetime import datetime
+from datetime import datetime, timedelta
 from enum import Enum
 from typing import List, Optional
+
+from pytz import timezone
 
 from utils import texts
 
@@ -43,7 +45,6 @@ class Group:
 class Budget:
     name: str
     type: BudgetType
-    start: datetime  # TODO: think about this
     amount: float
     left: float
     rollover: bool
@@ -55,7 +56,6 @@ class Budget:
         return cls(
             name=data['name'],
             type=BudgetType(data['type']),
-            start=datetime.fromisoformat(data['start']),
             amount=data['amount'],
             left=data['left'],
             rollover=data['rollover'],
@@ -67,7 +67,6 @@ class Budget:
         result = {
             'name': self.name,
             'type': self.type.value,
-            'start': self.start.isoformat(),
             'amount': self.amount,
             'left': self.left,
             'rollover': self.rollover,
@@ -80,15 +79,47 @@ class Budget:
         return result
 
     @property
-    def message_view(self) -> str:
-        result = f'<b>{texts.MSG_BUDGET_NAME}:</b> {self.name}\n' \
-                 f'<b>{texts.MSG_BUDGET_TYPE}:</b> {self.type.value}\n' \
-                 f'<b>{texts.MSG_BUDGET_AMOUNT}:</b> {self.amount}\n' \
-                 f'<b>{texts.MSG_BUDGET_LEFT}:</b> {self.left}\n' \
-                 f'<b>{texts.MSG_BUDGET_ROLLOUT}:</b> {self.rollover}'
+    def days_left(self) -> int:
+        today = datetime.now(timezone('Europe/Kiev'))
 
-        # TODO: fix type
-        # TODO: add group
+        if self.type == BudgetType.WEEKLY:
+            return 7 - today.weekday()
+
+        elif self.type == BudgetType.MONTHLY:
+            start_of_month = today.replace(day=1) - timedelta(days=1)
+            end_of_month = today.replace(day=28) + timedelta(days=4)
+            end_of_month = end_of_month - timedelta(days=end_of_month.day)
+            return (end_of_month - start_of_month).days + 1
+
+        elif self.type == BudgetType.YEARLY:
+            new_year = today.replace(day=1, month=1, year=today.year + 1)
+            return (new_year - today).days
+
+        elif self.type == BudgetType.ONE_TIME:
+            return 1  # TODO
+
+    @property
+    def left_for_today(self) -> float:
+        from utils.mongo import MongoTransaction
+        amount_per_day = self.left / self.days_left
+
+        today_transactions = MongoTransaction().get_all_for_today_by_budget(self.id)
+        today_income = sum([transaction.income for transaction in today_transactions])
+        today_outcome = sum([transaction.outcome for transaction in today_transactions])
+
+        return amount_per_day + today_income - today_outcome
+
+    @property
+    def message_view(self) -> str:
+
+        result = f'💰 <b>{self.name}</b> — {self.amount:,.2f}₴\n' \
+                 f'<b>{texts.MSG_BUDGET_TYPE}:</b> {self.type.value}\n' \
+                 f'<b>{texts.MSG_BUDGET_LEFT_PERIOD}:</b> {self.left:,.2f}₴\n'
+
+        if self.type != BudgetType.ONE_TIME:
+            result += f'<b>{texts.MSG_BUDGET_LEFT_TODAY}:</b> {self.left_for_today:,.2f}₴\n'
+
+        result += f'<b>{texts.MSG_BUDGET_ROLLOUT}:</b> {"✅" if self.rollover else "❎"}'
 
         return result
 
@@ -148,8 +179,6 @@ class Transaction:
 
         budget = MongoBudget().get_by_id(self.budget_id)
         result += f'<b>{texts.MSG_TRANSACTION_BUDGET_NAME}:</b> {budget.name}\n'
-
-        # TODO: add spender name
 
         return result
 
