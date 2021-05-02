@@ -17,8 +17,8 @@ from models.core import Budget, BudgetType
 from models.states import MainStates, BudgetAdding
 from utils import texts
 from utils.mongo import (
-    MongoGroups,
-    MongoBudgets,
+    MongoGroup,
+    MongoBudget,
 )
 from utils.redis import RedisBudget
 
@@ -93,7 +93,7 @@ async def add_budget_rollover(message: Message):
 
 
 async def adding_budget(message: Message):
-    group = MongoGroups().get_by_member(message.from_user.id)[0]  # TODO: workaround for solo user
+    group = MongoGroup().get_by_member(message.from_user.id)[0]  # TODO: workaround for solo user
     budget_content = RedisBudget().pop(message.from_user.id)
 
     budget = Budget(
@@ -106,7 +106,7 @@ async def adding_budget(message: Message):
         group_id=group.id,
     )
 
-    MongoBudgets().add(budget)
+    MongoBudget().add(budget)
 
     await MainStates.general.set()
     await message.answer(
@@ -117,8 +117,8 @@ async def adding_budget(message: Message):
 
 @dp.message_handler(text=texts.VIEW_BUDGETS, state='*')
 async def get_budgets_function(message: Message):
-    budgets = MongoBudgets().get_by_groups([
-        group.id for group in MongoGroups().get_by_member(message.from_user.id)
+    budgets = MongoBudget().get_by_groups([
+        group.id for group in MongoGroup().get_by_member(message.from_user.id)
     ])
 
     if not budgets:
@@ -140,7 +140,7 @@ async def remove_budget(callback: CallbackQuery):
         # TODO: log failure
         return
 
-    MongoBudgets().remove(budget_id)
+    MongoBudget().remove(budget_id)
 
     await bot.delete_message(
         chat_id=callback.from_user.id,

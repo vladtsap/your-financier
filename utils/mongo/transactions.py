@@ -6,7 +6,7 @@ from models.core import Transaction
 from utils.mongo.core import MongoBase
 
 
-class MongoTransactions(MongoBase):
+class MongoTransaction(MongoBase):
 
     def add(self, transaction: Transaction):
         self.transactions.insert_one(transaction.to_dict())

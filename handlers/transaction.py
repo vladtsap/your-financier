@@ -13,17 +13,17 @@ from models.core import Transaction
 from models.states import TransactionAdding, MainStates
 from utils import texts
 from utils.mongo import (
-    MongoGroups,
-    MongoBudgets,
-    MongoTransactions,
+    MongoGroup,
+    MongoBudget,
+    MongoTransaction,
 )
 from utils.redis import RedisTransaction
 
 
 @dp.message_handler(text=texts.ADD_TRANSACTION, state='*')
 async def add_transaction_function(message: Message):
-    budgets = [budget.name for budget in MongoBudgets().get_by_groups([
-        group.id for group in MongoGroups().get_by_member(message.from_user.id)
+    budgets = [budget.name for budget in MongoBudget().get_by_groups([
+        group.id for group in MongoGroup().get_by_member(message.from_user.id)
     ])]
 
     if not budgets:
@@ -43,7 +43,7 @@ async def add_budget_type(message: Message):
     RedisTransaction().add(
         user_id=message.from_user.id,
         key='budget_id',
-        value=MongoBudgets().get_by_name(message.text).id,
+        value=MongoBudget().get_by_name(message.text).id,
     )
 
     await TransactionAdding.type.set()
@@ -80,8 +80,8 @@ async def adding_transaction(message: Message):
     else:
         transaction = replace(transaction, income=float(message.text))
 
-    MongoTransactions().add(transaction)
-    MongoBudgets().update_balance(transaction)
+    MongoTransaction().add(transaction)
+    MongoBudget().update_balance(transaction)
 
     await MainStates.general.set()
     await message.answer(
@@ -94,10 +94,10 @@ async def adding_transaction(message: Message):
 async def get_transactions_function(message: Message):
     transactions = [
         transaction
-        for budget in MongoBudgets().get_by_groups([
-            group.id for group in MongoGroups().get_by_member(message.from_user.id)
+        for budget in MongoBudget().get_by_groups([
+            group.id for group in MongoGroup().get_by_member(message.from_user.id)
         ])
-        for transaction in MongoTransactions().get_by_budget(budget.id)
+        for transaction in MongoTransaction().get_by_budget(budget.id)
     ]
 
     if not transactions:
@@ -119,8 +119,8 @@ async def remove_transaction(callback: CallbackQuery):
         # TODO: log failure
         return
 
-    transaction = MongoTransactions().remove(transaction_id)
-    MongoBudgets().update_balance(transaction, on_removing=True)
+    transaction = MongoTransaction().remove(transaction_id)
+    MongoBudget().update_balance(transaction, on_removing=True)
 
     await bot.delete_message(
         chat_id=callback.from_user.id,
@@ -143,7 +143,7 @@ async def show_transactions_of_budget(callback: CallbackQuery):
         text=texts.YOUR_TRANSACTIONS_OF_BUDGET,
     )
 
-    for transaction in MongoTransactions().get_by_budget(budget_id):
+    for transaction in MongoTransaction().get_by_budget(budget_id):
         await bot.send_message(
             chat_id=callback.from_user.id,
             text=transaction.message_view,

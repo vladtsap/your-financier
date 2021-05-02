@@ -132,7 +132,7 @@ class Transaction:
 
     @property
     def message_view(self) -> str:
-        from utils.mongo import MongoBudgets
+        from utils.mongo import MongoBudget
         result = f'<b>{texts.MSG_TRANSACTION_DATE}:</b> ' \
                  f'{self.date.day:02}.{self.date.month:02} ' \
                  f'{self.date.hour:02}:{self.date.minute:02}\n'
@@ -146,7 +146,7 @@ class Transaction:
         if self.note:
             result += f'<b>{texts.MSG_TRANSACTION_NOTE}:</b> {self.note}\n'
 
-        budget = MongoBudgets().get_by_id(self.budget_id)
+        budget = MongoBudget().get_by_id(self.budget_id)
         result += f'<b>{texts.MSG_TRANSACTION_BUDGET_NAME}:</b> {budget.name}\n'
 
         # TODO: add spender name

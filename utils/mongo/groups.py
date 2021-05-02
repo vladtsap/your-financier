@@ -4,7 +4,7 @@ from models.core import Group
 from utils.mongo.core import MongoBase
 
 
-class MongoGroups(MongoBase):
+class MongoGroup(MongoBase):
 
     def add(self, group: Group):
         self.groups.insert_one(group.to_dict())

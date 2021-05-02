@@ -6,7 +6,7 @@ from models.core import Budget, Transaction
 from utils.mongo.core import MongoBase
 
 
-class MongoBudgets(MongoBase):
+class MongoBudget(MongoBase):
 
     def add(self, budget: Budget):
         self.budgets.insert_one(budget.to_dict())
@@ -41,6 +41,6 @@ class MongoBudgets(MongoBase):
         ]
 
     def remove(self, budget_id: str):
-        from utils.mongo import MongoTransactions
+        from utils.mongo import MongoTransaction
         self.budgets.find_one_and_delete({"_id": ObjectId(budget_id)})
-        MongoTransactions().remove_all_in_budget(budget_id)
+        MongoTransaction().remove_all_in_budget(budget_id)

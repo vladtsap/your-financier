@@ -1,3 +1,3 @@
-from utils.mongo.groups import MongoGroups
-from utils.mongo.budgets import MongoBudgets
-from utils.mongo.transactions import MongoTransactions
+from utils.mongo.groups import MongoGroup
+from utils.mongo.budgets import MongoBudget
+from utils.mongo.transactions import MongoTransaction
