@@ -1,21 +1,22 @@
-from enum import Enum
+from models.core import ExtendedEnum
+from utils import texts
 
 
-class Categories(Enum):
-    AUTO = 'auto'
-    BOOKS = 'books'
-    CLOTHES = 'clothes'
-    ENTERTAINMENT = 'entertainment'
-    FEES = 'fees'
-    FOOD = 'food'
-    GIFTS = 'gifts'
-    HEALTH = 'health'
-    HOME = 'home'
-    PAYMENT = 'payment'
-    SUPERMARKET = 'supermarket'
-    TRANSPORT = 'transport'
-    TRAVEL = 'travel'
-    OTHER = 'other'
+class Categories(ExtendedEnum):
+    AUTO = ('auto', texts.AUTO_CATEGORY)
+    BOOKS = ('books', texts.BOOKS_CATEGORY)
+    CLOTHES = ('clothes', texts.CLOTHES_CATEGORY)
+    ENTERTAINMENT = ('entertainment', texts.ENTERTAINMENT_CATEGORY)
+    FEES = ('fees', texts.FEES_CATEGORY)
+    FOOD = ('food', texts.FOOD_CATEGORY)
+    GIFTS = ('gifts', texts.GIFTS_CATEGORY)
+    HEALTH = ('health', texts.HEALTH_CATEGORY)
+    HOME = ('home', texts.HOME_CATEGORY)
+    PAYMENT = ('payment', texts.PAYMENT_CATEGORY)
+    SUPERMARKET = ('supermarket', texts.SUPERMARKET_CATEGORY)
+    TRANSPORT = ('transport', texts.TRANSPORT_CATEGORY)
+    TRAVEL = ('travel', texts.TRAVEL_CATEGORY)
+    OTHER = ('other', texts.OTHER_CATEGORY)
 
     @classmethod
     def match(cls, mcc: int):

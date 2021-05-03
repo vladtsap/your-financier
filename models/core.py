@@ -8,12 +8,7 @@ from pytz import timezone
 from utils import texts
 
 
-class BudgetType(Enum):
-    WEEKLY = ('weekly', texts.WEEKLY)
-    MONTHLY = ('monthly', texts.MONTHLY)
-    YEARLY = ('yearly', texts.MONTHLY)
-    ONE_TIME = ('one-time', texts.ONE_TIME)
-
+class ExtendedEnum(Enum):
     @property
     def value(self):
         return super().value[0]
@@ -28,6 +23,13 @@ class BudgetType(Enum):
             if item.value == key or item.verbose_name == key:
                 return item
         return super()._missing_(key)
+
+
+class BudgetType(ExtendedEnum):
+    WEEKLY = ('weekly', texts.WEEKLY)
+    MONTHLY = ('monthly', texts.MONTHLY)
+    YEARLY = ('yearly', texts.MONTHLY)
+    ONE_TIME = ('one-time', texts.ONE_TIME)
 
 
 @dataclass
