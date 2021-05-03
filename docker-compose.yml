@@ -1,0 +1,30 @@
+version: '3.8'
+
+
+services:
+
+  mongo-finance:
+    image: mongo
+    container_name: mongo-finance
+    restart: unless-stopped
+    ports: # only for debug
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: "$MONGO_USER"
+      MONGO_INITDB_ROOT_PASSWORD: "$MONGO_PASSWORD"
+    volumes:
+      - mongo-data:/data/db
+
+  redis-finance:
+    image: redis
+    container_name: redis-finance
+    restart: unless-stopped
+    volumes:
+      - redis-data:/data
+    ports: # only for debug
+      - "6379:6379"
+
+
+volumes:
+  mongo-data:
+  redis-data:
