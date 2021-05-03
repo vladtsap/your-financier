@@ -116,11 +116,13 @@ class Budget:
     @property
     def left_for_today(self) -> float:
         from utils.mongo import MongoTransaction
-        amount_per_day = self.left / self.days_left
 
         today_transactions = MongoTransaction().get_all_for_today_by_budget(self.id)
         today_income = sum([transaction.income for transaction in today_transactions])
         today_outcome = sum([transaction.outcome for transaction in today_transactions])
+
+        left_before_today = self.left + today_outcome - today_income
+        amount_per_day = left_before_today / self.days_left
 
         return amount_per_day + today_income - today_outcome
 
@@ -181,9 +183,9 @@ class Transaction:
         from utils.mongo import MongoBudget
 
         if self.outcome:
-            result = f'<b>-{self.outcome:,.2f}₴</b>\n'
+            result = f'📤 <b>-{self.outcome:,.2f}₴</b>\n'
         else:
-            result = f'<b>+{self.income:,.2f}₴</b>\n'
+            result = f'📥 <b>+{self.income:,.2f}₴</b>\n'
 
         result += f'🗓 {self.date.day:02}.{self.date.month:02} {self.date.hour:02}:{self.date.minute:02}\n'
 
