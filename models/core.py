@@ -73,7 +73,7 @@ class Categories(ExtendedEnum):
     @classmethod
     def match(cls, mcc: int):
 
-        if mcc in range(3351, 3442) or [
+        if mcc in range(3351, 3442) or mcc in [
             5013, 5172, 5511, 5521, 5531, 5532, 5533, 5541, 5542, 5552, 5561, 5571, 5592, 5598, 5599,
             5935, 5983, 7511, 7512, 7513, 7519, 7523, 7524, 7531, 7534, 7535, 7538, 7542, 7549, 8675,
         ]:
@@ -134,7 +134,7 @@ class Categories(ExtendedEnum):
         elif mcc in [4111, 4121, 4131, 4784, 5962]:
             return cls.TRANSPORT
 
-        elif mcc in range(3000, 3303) or range(3501, 3839) or [
+        elif mcc in range(3000, 3303) or mcc in range(3501, 3839) or mcc in [
             4011, 4112, 4411, 4457, 4468, 4511, 4582, 4722, 4723, 4789, 5551, 7011, 7033, 7991, 7992,
         ]:
             return cls.TRAVEL
@@ -297,17 +297,19 @@ class Transaction:
     @property
     def message_view(self) -> str:
         from utils.mongo import MongoBudget
+        budget = MongoBudget().get_by_id(self.budget_id)
 
         if self.outcome:
             result = f'📤 <b>-{self.outcome:,.2f}₴</b>\n'
         else:
             result = f'📥 <b>+{self.income:,.2f}₴</b>\n'
 
-        result += f'🗓 {self.date.day:02}.{self.date.month:02} {self.date.hour:02}:{self.date.minute:02}\n'
+        result += f'🗓 {self.date.day:02}.{self.date.month:02} {self.date.hour:02}:{self.date.minute:02}\n' \
+                  f'💰 {budget.name}\n' \
+                  f'🏷 {self.category.verbose_name}\n'
 
-        budget = MongoBudget().get_by_id(self.budget_id)
-        result += f'💰 {budget.name}\n'
-        result += f'🏷 {self.note if self.note else self.category.verbose_name}\n'
+        if self.note:
+            result += self.note
 
         return result
 

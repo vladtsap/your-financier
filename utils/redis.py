@@ -1,6 +1,12 @@
 import redis
 
-from config import REDIS_HOST, REDIS_PORT
+from config import (
+    REDIS_HOST,
+    REDIS_PORT,
+    REDIS_DB_BP,
+    REDIS_DB_TP,
+    REDIS_DB_BC,
+)
 from models.core import Singleton
 
 
@@ -27,3 +33,21 @@ class RedisBase(metaclass=Singleton):
     @staticmethod
     def _decode_dict(d: dict):
         return {k.decode('utf-8'): v.decode('utf-8') for k, v in d.items()}
+
+
+class RedisBudget(RedisBase):
+
+    def __init__(self):
+        super(RedisBudget, self).__init__(REDIS_DB_BP)
+
+
+class RedisTransaction(RedisBase):
+
+    def __init__(self):
+        super(RedisTransaction, self).__init__(REDIS_DB_TP)
+
+
+class RedisBank(RedisBase):
+
+    def __init__(self):
+        super(RedisBank, self).__init__(REDIS_DB_BC)

@@ -119,7 +119,6 @@ async def adding_transaction(message: Message):
         transaction = replace(transaction, income=float(message.text))
 
     MongoTransaction().add(transaction)
-    MongoBudget().update_balance(transaction)
 
     await MainStates.general.set()
     await message.answer(
@@ -157,8 +156,7 @@ async def remove_transaction(callback: CallbackQuery):
         # TODO: log failure
         return
 
-    transaction = MongoTransaction().remove(transaction_id)
-    MongoBudget().update_balance(transaction, on_removing=True)
+    MongoTransaction().remove(transaction_id)
 
     await bot.delete_message(
         chat_id=callback.from_user.id,

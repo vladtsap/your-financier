@@ -41,6 +41,7 @@ def available_budgets_keyboard(budgets: list) -> ReplyKeyboardMarkup:
             [budget] for budget in budgets
         ],
         resize_keyboard=True,
+        one_time_keyboard=True,
     )
 
 
