@@ -47,6 +47,12 @@ class MongoGroup(MongoBase):
             for group_content in self.groups.find({"members": {"$in": [member_id]}})
         ]
 
+    def get_by_name(self, name: str) -> Group:
+        if group_content := self.groups.find_one({"name": name}):
+            return Group.from_dict(group_content)
+        else:
+            return None  # TODO: raise exception
+
 
 class MongoBudget(MongoBase):
 

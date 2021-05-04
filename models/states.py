@@ -6,6 +6,7 @@ class MainStates(StatesGroup):
 
 
 class BudgetAdding(StatesGroup):
+    group = State()
     name = State()
     type = State()
     amount = State()
