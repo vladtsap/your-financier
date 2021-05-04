@@ -12,6 +12,7 @@ from keyboards.reply import (
     available_budgets_keyboard,
     transaction_types_keyboard,
     transaction_categories_keyboard,
+    remove_keyboard,
 )
 from models import callbacks
 from models.core import Transaction, Categories
@@ -76,14 +77,28 @@ async def add_budget_type(message: Message):
 
 @dp.message_handler(state=TransactionAdding.category)
 async def add_transaction_category(message: Message):
+    # TODO: clear keyboard
+    try:
+        category = Categories(message.text)
+    except ValueError:
+        category = Categories.OTHER
+        RedisTransaction().add(
+            user_id=message.from_user.id,
+            key='note',
+            value=message.text.lower(),
+        )
+
     RedisTransaction().add(
         user_id=message.from_user.id,
         key='category',
-        value=Categories(message.text).value,
+        value=category.value,
     )
 
     await TransactionAdding.amount.set()
-    await message.answer(texts.ENTER_TRANSACTION_AMOUNT)
+    await message.answer(
+        texts.ENTER_TRANSACTION_AMOUNT,
+        reply_markup=remove_keyboard,
+    )
 
 
 @dp.message_handler(state=TransactionAdding.amount)
@@ -95,6 +110,7 @@ async def adding_transaction(message: Message):
         member_id=message.from_user.id,
         date=datetime.now(timezone('Europe/Kiev')),
         category=Categories(transaction_content['category']),
+        note=transaction_content.get('note'),
     )
 
     if transaction_content['spend'] == 'True':

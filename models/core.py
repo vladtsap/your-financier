@@ -262,6 +262,7 @@ class Transaction:
     category: Categories
     outcome: Optional[float] = field(default=0.)
     income: Optional[float] = field(default=0.)
+    note: Optional[str] = field(default=None)
     id: Optional[str] = field(default=None)
 
     @classmethod
@@ -270,9 +271,10 @@ class Transaction:
             budget_id=data['budget_id'],
             member_id=data['member_id'],
             date=datetime.fromisoformat(data['date']),
+            category=Categories(data['category']),
             outcome=data.get('outcome', 0.),
             income=data.get('income', 0.),
-            category=Categories(data['category']),
+            note=data.get('note'),
             id=str(data.get('_id')),
         )
 
@@ -281,9 +283,10 @@ class Transaction:
             'budget_id': self.budget_id,
             'member_id': self.member_id,
             'date': self.date.isoformat(),
+            'category': self.category.value,
             'outcome': self.outcome,
             'income': self.income,
-            'category': self.category.value,
+            'note': self.note,
         }
 
         if self.id:
@@ -303,8 +306,8 @@ class Transaction:
         result += f'🗓 {self.date.day:02}.{self.date.month:02} {self.date.hour:02}:{self.date.minute:02}\n'
 
         budget = MongoBudget().get_by_id(self.budget_id)
-        result += f'💰 {budget.name}\n' \
-                  f'🏷 {self.category.verbose_name}\n'
+        result += f'💰 {budget.name}\n'
+        result += f'🏷 {self.note if self.note else self.category.verbose_name}\n'
 
         return result
 
