@@ -28,7 +28,7 @@ class ExtendedEnum(Enum):
 class BudgetType(ExtendedEnum):
     WEEKLY = ('weekly', texts.WEEKLY)
     MONTHLY = ('monthly', texts.MONTHLY)
-    YEARLY = ('yearly', texts.MONTHLY)
+    YEARLY = ('yearly', texts.YEARLY)
     ONE_TIME = ('one-time', texts.ONE_TIME)
 
 

@@ -18,12 +18,19 @@ async def start_function(message: Message):
                 members=[member_id],
             )
         )
-        await message.answer(text=texts.WELCOME)
+        await message.answer(
+            text=texts.WELCOME,
+            reply_markup=start_keyboard,
+        )
 
     else:
         await message.answer(
             text=texts.MAIN_MENU,
             reply_markup=start_keyboard,
         )
+
+    if invite_id := message.get_args():
+        group = MongoGroup().get_by_id(invite_id)
+        MongoGroup().add_member(group, member_id)
 
     await MainStates.general.set()

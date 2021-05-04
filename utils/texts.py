@@ -63,6 +63,8 @@ ENTER_BANK_TOKEN = 'Введи токен банку'
 BANK_CONNECTED = "Банк успішно прив'язано"
 BANK_NOT_CONNECTED = "Сталася помилка при з'єдананні з банком"
 
+ENTER_GROUP_NAME = 'Введи назву новій групі'
+
 # categories
 AUTO_CATEGORY = 'авто'
 BOOKS_CATEGORY = 'книги'

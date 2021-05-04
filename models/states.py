@@ -22,3 +22,7 @@ class TransactionAdding(StatesGroup):
 class BankConnection(StatesGroup):
     budget = State()
     token = State()
+
+
+class GroupCreating(StatesGroup):
+    name = State()
