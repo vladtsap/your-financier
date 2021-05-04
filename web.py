@@ -2,13 +2,14 @@ from dataclasses import replace
 from datetime import datetime
 from json import JSONDecodeError
 
-from fastapi import FastAPI, Request, Response, HTTPException
+import uvicorn
+from fastapi import FastAPI, Request, Response
 from fastapi.responses import PlainTextResponse
 from pytz import timezone
-import uvicorn
 
+from config import bot
 from models.core import Transaction, Categories
-from utils.mongo import MongoTransaction, MongoBudget
+from utils.mongo import MongoTransaction
 
 app = FastAPI()
 
@@ -52,8 +53,6 @@ async def webhook(budget_id: str, member_id: int, request: Request):
     )
 
     MongoTransaction().add(transaction)
-    MongoBudget().update_balance(transaction)
-    from config import bot
     await bot.send_message(
         chat_id=member_id,
         text=transaction.message_view,
