@@ -53,5 +53,23 @@ TRANSACTION_SPEND = 'витрата'
 
 SELECT_TRANSACTION_BUDGET = 'Вибери бюджет, до котрої відноситься транзакція'
 ENTER_TRANSACTION_TYPE = 'Вибери тип транзакції'
+ENTER_TRANSACTION_CATEGORY = 'Вибери категорію'
 ENTER_TRANSACTION_AMOUNT = 'Введи суму транзакції'
 TRANSACTION_ADDED = 'Транзакція успішно додана'
+
+# categories
+AUTO_CATEGORY = 'авто'
+BOOKS_CATEGORY = 'книги'
+CLOTHES_CATEGORY = 'одяг'
+ENTERTAINMENT_CATEGORY = 'розваги'
+FEES_CATEGORY = 'податки'
+FOOD_CATEGORY = 'кафе'
+GIFTS_CATEGORY = 'подарунки'
+HEALTH_CATEGORY = "здоров'я"
+HOME_CATEGORY = 'дім'
+PAYMENT_CATEGORY = 'платежі'
+SALARY_CATEGORY = 'зарплата'
+SUPERMARKET_CATEGORY = 'супермаркет'
+TRANSPORT_CATEGORY = 'транспорт'
+TRAVEL_CATEGORY = 'подорожі'
+OTHER_CATEGORY = 'інше'

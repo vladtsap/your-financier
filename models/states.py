@@ -15,4 +15,5 @@ class BudgetAdding(StatesGroup):
 class TransactionAdding(StatesGroup):
     budget = State()
     type = State()
+    category = State()
     amount = State()
