@@ -297,17 +297,19 @@ class Transaction:
     @property
     def message_view(self) -> str:
         from utils.mongo import MongoBudget
+        budget = MongoBudget().get_by_id(self.budget_id)
 
         if self.outcome:
             result = f'📤 <b>-{self.outcome:,.2f}₴</b>\n'
         else:
             result = f'📥 <b>+{self.income:,.2f}₴</b>\n'
 
-        result += f'🗓 {self.date.day:02}.{self.date.month:02} {self.date.hour:02}:{self.date.minute:02}\n'
+        result += f'🗓 {self.date.day:02}.{self.date.month:02} {self.date.hour:02}:{self.date.minute:02}\n' \
+                  f'💰 {budget.name}\n' \
+                  f'🏷 {self.category.verbose_name}\n'
 
-        budget = MongoBudget().get_by_id(self.budget_id)
-        result += f'💰 {budget.name}\n'
-        result += f'🏷 {self.note if self.note else self.category.verbose_name}\n'
+        if self.note:
+            result += self.note
 
         return result
 

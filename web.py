@@ -1,5 +1,6 @@
 from dataclasses import replace
 from datetime import datetime
+from typing import Optional
 
 import uvicorn
 from fastapi import FastAPI, Response
@@ -17,6 +18,8 @@ class Item(BaseModel):
     time: int
     mcc: int
     amount: int
+    description: str
+    comment: Optional[str] = None
 
 
 class Data(BaseModel):
@@ -45,12 +48,16 @@ async def process_transaction(budget_id: str, member_id: int, obj: Object):
             datetime.utcfromtimestamp(item.time)
         ).astimezone(timezone('Europe/Kiev')),
         category=Categories.match(item.mcc),
+        note=item.description,
     )
 
     if (amount := item.amount) > 0:
         transaction = replace(transaction, income=amount / 100)
     else:
         transaction = replace(transaction, outcome=abs(amount) / 100)
+
+    if comment := item.comment:
+        transaction = replace(transaction, note=f'{transaction.note}\n{comment}')
 
     MongoTransaction().add(transaction)
 
