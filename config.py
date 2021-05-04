@@ -11,6 +11,7 @@ REDIS_PORT = env.int("REDIS_PORT", default=6379)
 REDIS_DB_FSM = env.int("REDIS_DB_FSM", default=0)
 REDIS_DB_BP = env.int("REDIS_DB_BP", default=1)
 REDIS_DB_TP = env.int("REDIS_DB_TP", default=2)
+REDIS_DB_BC = env.int("REDIS_DB_BC", default=3)
 
 MONGO_HOST = env.str("MONGO_HOST", default="localhost")
 MONGO_USER = env.str("MONGO_USER", default="root")

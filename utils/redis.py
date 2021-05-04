@@ -1,6 +1,12 @@
 import redis
 
-from config import REDIS_HOST, REDIS_PORT, REDIS_DB_BP, REDIS_DB_TP
+from config import (
+    REDIS_HOST,
+    REDIS_PORT,
+    REDIS_DB_BP,
+    REDIS_DB_TP,
+    REDIS_DB_BC,
+)
 from models.core import Singleton
 
 
@@ -39,3 +45,9 @@ class RedisTransaction(RedisBase):
 
     def __init__(self):
         super(RedisTransaction, self).__init__(REDIS_DB_TP)
+
+
+class RedisBank(RedisBase):
+
+    def __init__(self):
+        super(RedisBank, self).__init__(REDIS_DB_BC)

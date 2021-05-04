@@ -17,3 +17,8 @@ class TransactionAdding(StatesGroup):
     type = State()
     category = State()
     amount = State()
+
+
+class BankConnection(StatesGroup):
+    budget = State()
+    token = State()

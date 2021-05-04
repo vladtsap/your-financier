@@ -57,6 +57,12 @@ ENTER_TRANSACTION_CATEGORY = 'Вибери категорію'
 ENTER_TRANSACTION_AMOUNT = 'Введи суму транзакції'
 TRANSACTION_ADDED = 'Транзакція успішно додана'
 
+SELECT_BANK_BUDGET = "Вибери бюджет, до котрої буде прив'язаний банк"
+SELECT_BANK_CATEGORY_TYPE = 'Сюди будуть враховуватися всі категорії чи тільки певна?'
+ENTER_BANK_TOKEN = 'Введи токен банку'
+BANK_CONNECTED = "Банк успішно прив'язано"
+BANK_NOT_CONNECTED = "Сталася помилка при з'єдананні з банком"
+
 # categories
 AUTO_CATEGORY = 'авто'
 BOOKS_CATEGORY = 'книги'
