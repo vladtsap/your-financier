@@ -4,6 +4,7 @@ from aiogram.types import (
     ReplyKeyboardRemove,
 )
 
+from models.core import Categories
 from utils import texts
 
 start_keyboard = ReplyKeyboardMarkup(
@@ -49,6 +50,14 @@ transaction_types_keyboard = ReplyKeyboardMarkup(
             KeyboardButton(texts.TRANSACTION_RECEIVE),
             KeyboardButton(texts.TRANSACTION_SPEND)
         ],
+    ],
+    resize_keyboard=True,
+    one_time_keyboard=True,
+)
+
+transaction_categories_keyboard = ReplyKeyboardMarkup(
+    keyboard=[
+        [KeyboardButton(category)] for category in Categories.suggested()
     ],
     resize_keyboard=True,
     one_time_keyboard=True,

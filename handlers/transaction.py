@@ -7,9 +7,14 @@ from pytz import timezone
 
 from config import dp, bot
 from keyboards.inline import transaction_keyboard
-from keyboards.reply import start_keyboard, available_budgets_keyboard, transaction_types_keyboard
+from keyboards.reply import (
+    start_keyboard,
+    available_budgets_keyboard,
+    transaction_types_keyboard,
+    transaction_categories_keyboard,
+)
 from models import callbacks
-from models.core import Transaction
+from models.core import Transaction, Categories
 from models.states import TransactionAdding, MainStates
 from utils import texts
 from utils.mongo import (
@@ -61,6 +66,21 @@ async def add_budget_type(message: Message):
         value=str(message.text == texts.TRANSACTION_SPEND),
     )
 
+    await TransactionAdding.category.set()
+    await message.answer(
+        texts.ENTER_TRANSACTION_CATEGORY,
+        reply_markup=transaction_categories_keyboard
+    )
+
+
+@dp.message_handler(state=TransactionAdding.category)
+async def add_transaction_category(message: Message):
+    RedisTransaction().add(
+        user_id=message.from_user.id,
+        key='category',
+        value=Categories(message.text).value,
+    )
+
     await TransactionAdding.amount.set()
     await message.answer(texts.ENTER_TRANSACTION_AMOUNT)
 
@@ -73,6 +93,7 @@ async def adding_transaction(message: Message):
         budget_id=transaction_content['budget_id'],
         member_id=message.from_user.id,
         date=datetime.now(timezone('Europe/Kiev')),
+        category=Categories(transaction_content['category']),
     )
 
     if transaction_content['spend'] == 'True':

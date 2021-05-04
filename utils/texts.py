@@ -53,6 +53,7 @@ TRANSACTION_SPEND = 'витрата'
 
 SELECT_TRANSACTION_BUDGET = 'Вибери бюджет, до котрої відноситься транзакція'
 ENTER_TRANSACTION_TYPE = 'Вибери тип транзакції'
+ENTER_TRANSACTION_CATEGORY = 'Вибери категорію'
 ENTER_TRANSACTION_AMOUNT = 'Введи суму транзакції'
 TRANSACTION_ADDED = 'Транзакція успішно додана'
 
