@@ -9,9 +9,8 @@ from config import dp, bot
 from keyboards.inline import transaction_keyboard
 from keyboards.reply import (
     start_keyboard,
-    available_budgets_keyboard,
+    options_keyboard,
     transaction_types_keyboard,
-    transaction_categories_keyboard,
     remove_keyboard,
 )
 from models import callbacks
@@ -40,7 +39,7 @@ async def add_transaction_function(message: Message):
     await TransactionAdding.budget.set()
     await message.answer(
         text=texts.SELECT_TRANSACTION_BUDGET,
-        reply_markup=available_budgets_keyboard(budgets),
+        reply_markup=options_keyboard(budgets),
     )
 
 
@@ -71,7 +70,7 @@ async def add_budget_type(message: Message):
     await TransactionAdding.category.set()
     await message.answer(
         texts.ENTER_TRANSACTION_CATEGORY,
-        reply_markup=transaction_categories_keyboard(spend),
+        reply_markup=options_keyboard(Categories.suggested_spending() if spend else Categories.suggested_earning()),
     )
 
 

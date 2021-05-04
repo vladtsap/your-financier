@@ -17,6 +17,17 @@ start_keyboard = ReplyKeyboardMarkup(
 
 remove_keyboard = ReplyKeyboardRemove()
 
+
+def options_keyboard(items: list) -> ReplyKeyboardMarkup:
+    return ReplyKeyboardMarkup(
+        keyboard=[
+            [item] for item in items
+        ],
+        resize_keyboard=True,
+        one_time_keyboard=True,
+    )
+
+
 budget_types_keyboard = ReplyKeyboardMarkup(
     keyboard=[
         [KeyboardButton(texts.WEEKLY), KeyboardButton(texts.MONTHLY)],
@@ -34,17 +45,6 @@ budget_rollover_keyboard = ReplyKeyboardMarkup(
     one_time_keyboard=True,
 )
 
-
-def available_budgets_keyboard(budgets: list) -> ReplyKeyboardMarkup:
-    return ReplyKeyboardMarkup(
-        keyboard=[
-            [budget] for budget in budgets
-        ],
-        resize_keyboard=True,
-        one_time_keyboard=True,
-    )
-
-
 transaction_types_keyboard = ReplyKeyboardMarkup(
     keyboard=[
         [
@@ -55,14 +55,3 @@ transaction_types_keyboard = ReplyKeyboardMarkup(
     resize_keyboard=True,
     one_time_keyboard=True,
 )
-
-
-def transaction_categories_keyboard(spend: bool) -> ReplyKeyboardMarkup:
-    categories = Categories.suggested_spending() if spend else Categories.suggested_earning()
-    return ReplyKeyboardMarkup(
-        keyboard=[
-            [category] for category in categories
-        ],
-        resize_keyboard=True,
-        one_time_keyboard=True,
-    )

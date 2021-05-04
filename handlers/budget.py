@@ -8,7 +8,7 @@ from keyboards.reply import (
     remove_keyboard,
     budget_types_keyboard,
     budget_rollover_keyboard,
-    available_budgets_keyboard,
+    options_keyboard,
 )
 from models import callbacks
 from models.core import Budget, BudgetType
@@ -27,7 +27,7 @@ async def add_budget_function(message: Message):
     await BudgetAdding.group.set()
     await message.answer(
         text=texts.ENTER_BUDGET_GROUP,
-        reply_markup=available_budgets_keyboard(groups),
+        reply_markup=options_keyboard(groups),
     )
 
 
