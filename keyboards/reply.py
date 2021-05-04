@@ -55,10 +55,13 @@ transaction_types_keyboard = ReplyKeyboardMarkup(
     one_time_keyboard=True,
 )
 
-transaction_categories_keyboard = ReplyKeyboardMarkup(
-    keyboard=[
-        [KeyboardButton(category)] for category in Categories.suggested()
-    ],
-    resize_keyboard=True,
-    one_time_keyboard=True,
-)
+
+def transaction_categories_keyboard(spend: bool) -> ReplyKeyboardMarkup:
+    categories = Categories.suggested_spending() if spend else Categories.suggested_earning()
+    return ReplyKeyboardMarkup(
+        keyboard=[
+            [category] for category in categories
+        ],
+        resize_keyboard=True,
+        one_time_keyboard=True,
+    )

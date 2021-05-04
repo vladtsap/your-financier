@@ -43,14 +43,32 @@ class Categories(ExtendedEnum):
     HEALTH = ('health', texts.HEALTH_CATEGORY)
     HOME = ('home', texts.HOME_CATEGORY)
     PAYMENT = ('payment', texts.PAYMENT_CATEGORY)
+    SALARY = ('salary', texts.SALARY_CATEGORY)
     SUPERMARKET = ('supermarket', texts.SUPERMARKET_CATEGORY)
     TRANSPORT = ('transport', texts.TRANSPORT_CATEGORY)
     TRAVEL = ('travel', texts.TRAVEL_CATEGORY)
     OTHER = ('other', texts.OTHER_CATEGORY)
 
     @classmethod
-    def suggested(cls) -> list:
-        return [category.verbose_name for category in cls]
+    def spending(cls) -> tuple:
+        return (
+            cls.AUTO, cls.BOOKS, cls.CLOTHES, cls.ENTERTAINMENT, cls.FEES, cls.FOOD, cls.GIFTS,
+            cls.HEALTH, cls.HOME, cls.PAYMENT, cls.SUPERMARKET, cls.TRANSPORT, cls.TRAVEL, cls.OTHER,
+        )
+
+    @classmethod
+    def earning(cls) -> tuple:
+        return (
+            cls.GIFTS, cls.PAYMENT, cls.SALARY, cls.OTHER,
+        )
+
+    @classmethod
+    def suggested_spending(cls) -> list:
+        return [category.verbose_name for category in cls.spending()]
+
+    @classmethod
+    def suggested_earning(cls) -> list:
+        return [category.verbose_name for category in cls.earning()]
 
     @classmethod
     def match(cls, mcc: int):

@@ -68,6 +68,7 @@ GIFTS_CATEGORY = 'подарунки'
 HEALTH_CATEGORY = "здоров'я"
 HOME_CATEGORY = 'дім'
 PAYMENT_CATEGORY = 'платежі'
+SALARY_CATEGORY = 'зарплата'
 SUPERMARKET_CATEGORY = 'супермаркет'
 TRANSPORT_CATEGORY = 'транспорт'
 TRAVEL_CATEGORY = 'подорожі'

@@ -60,16 +60,17 @@ async def add_budget_type(message: Message):
 
 @dp.message_handler(state=TransactionAdding.type)
 async def add_budget_type(message: Message):
+    spend = message.text == texts.TRANSACTION_SPEND
     RedisTransaction().add(
         user_id=message.from_user.id,
         key='spend',
-        value=str(message.text == texts.TRANSACTION_SPEND),
+        value=str(spend),
     )
 
     await TransactionAdding.category.set()
     await message.answer(
         texts.ENTER_TRANSACTION_CATEGORY,
-        reply_markup=transaction_categories_keyboard
+        reply_markup=transaction_categories_keyboard(spend),
     )
 
 
