@@ -124,6 +124,14 @@ async def adding_transaction(message: Message):
         reply_markup=start_keyboard,
     )
 
+    for member_id in MongoGroup().get_by_id(
+            MongoBudget().get_by_id(transaction.budget_id).group_id
+    ).members:
+        await bot.send_message(
+            chat_id=member_id,
+            text=transaction.message_view,
+        )
+
 
 @dp.message_handler(text=texts.VIEW_TRANSACTIONS, state='*')
 async def get_transactions_function(message: Message):
