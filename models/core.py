@@ -28,7 +28,7 @@ class ExtendedEnum(Enum):
 class BudgetType(ExtendedEnum):
     WEEKLY = ('weekly', texts.WEEKLY)
     MONTHLY = ('monthly', texts.MONTHLY)
-    YEARLY = ('yearly', texts.MONTHLY)
+    YEARLY = ('yearly', texts.YEARLY)
     ONE_TIME = ('one-time', texts.ONE_TIME)
 
 
@@ -144,6 +144,25 @@ class Categories(ExtendedEnum):
 
 
 @dataclass
+class Member:
+    id: int
+    name: str
+
+    @classmethod
+    def from_dict(cls, data: dict):
+        return cls(
+            id=data['id'],
+            name=data['name'],
+        )
+
+    def to_dict(self) -> dict:
+        return {
+            'id': self.id,
+            'name': self.name,
+        }
+
+
+@dataclass
 class Group:
     name: str
     members: List[int]
@@ -165,6 +184,15 @@ class Group:
 
         if self.id:
             result['_id'] = self.id
+
+        return result
+
+    @property
+    def message_view(self) -> str:
+        from utils.mongo import MongoMember
+        result = f'<b>{texts.MSG_GROUP_NAME}</b>: {self.name}\n' \
+                 f'<b>{texts.MSG_GROUP_MEMBERS}</b>: ' \
+                 f'{", ".join([MongoMember().get_by_id(member_id).name for member_id in self.members])}'
 
         return result
 
@@ -241,6 +269,7 @@ class Budget:
 
     @property
     def message_view(self) -> str:
+        from utils.mongo import MongoGroup
 
         result = f'💰 <b>{self.name}</b> — {self.amount:,.2f}₴\n' \
                  f'<b>{texts.MSG_BUDGET_TYPE}:</b> {self.type.verbose_name}\n' \
@@ -249,7 +278,8 @@ class Budget:
         if self.type != BudgetType.ONE_TIME:
             result += f'<b>{texts.MSG_BUDGET_LEFT_TODAY}:</b> {self.left_for_today:,.2f}₴\n'
 
-        result += f'<b>{texts.MSG_BUDGET_ROLLOUT}:</b> {"✅" if self.rollover else "❎"}'
+        result += f'<b>{texts.MSG_BUDGET_ROLLOUT}:</b> {"✅" if self.rollover else "❎"}\n' \
+                  f'<b>{texts.MSG_BUDGET_GROUP}:</b> {MongoGroup().get_by_id(self.group_id).name}\n'
 
         return result
 
@@ -296,7 +326,7 @@ class Transaction:
 
     @property
     def message_view(self) -> str:
-        from utils.mongo import MongoBudget
+        from utils.mongo import MongoBudget, MongoMember
         budget = MongoBudget().get_by_id(self.budget_id)
 
         if self.outcome:
@@ -306,6 +336,7 @@ class Transaction:
 
         result += f'🗓 {self.date.day:02}.{self.date.month:02} {self.date.hour:02}:{self.date.minute:02}\n' \
                   f'💰 {budget.name}\n' \
+                  f'👤 {MongoMember().get_by_id(self.member_id).name}\n' \
                   f'🏷 {self.category.verbose_name}\n'
 
         if self.note:

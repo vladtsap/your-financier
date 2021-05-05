@@ -8,4 +8,4 @@ from middlewares.admin_only import AccessMiddleware
 def setup(dp: Dispatcher):
     dp.middleware.setup(LoggingMiddleware())
     dp.middleware.setup(ThrottlingMiddleware())
-    dp.middleware.setup(AccessMiddleware(148111610))
+    dp.middleware.setup(AccessMiddleware([148111610, 419634156]))

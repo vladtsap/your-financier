@@ -6,6 +6,7 @@ class MainStates(StatesGroup):
 
 
 class BudgetAdding(StatesGroup):
+    group = State()
     name = State()
     type = State()
     amount = State()
@@ -22,3 +23,7 @@ class TransactionAdding(StatesGroup):
 class BankConnection(StatesGroup):
     budget = State()
     token = State()
+
+
+class GroupCreating(StatesGroup):
+    name = State()

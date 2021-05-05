@@ -9,7 +9,7 @@ from pytz import timezone
 
 from config import bot
 from models.core import Transaction, Categories
-from utils.mongo import MongoTransaction
+from utils.mongo import MongoTransaction, MongoGroup, MongoBudget
 
 app = FastAPI()
 
@@ -61,10 +61,13 @@ async def process_transaction(budget_id: str, member_id: int, obj: Object):
 
     MongoTransaction().add(transaction)
 
-    await bot.send_message(
-        chat_id=member_id,
-        text=transaction.message_view,
-    )
+    for member_id in MongoGroup().get_by_id(
+            MongoBudget().get_by_id(transaction.budget_id).group_id
+    ).members:
+        await bot.send_message(
+            chat_id=member_id,
+            text=transaction.message_view,
+        )
 
     return Response()
 

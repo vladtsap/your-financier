@@ -2,7 +2,7 @@ import requests
 from aiogram.types import Message
 
 from config import dp
-from keyboards.reply import available_budgets_keyboard, start_keyboard
+from keyboards.reply import options_keyboard, start_keyboard
 from models.states import MainStates, BankConnection
 from utils import texts
 from utils.mongo import MongoBudget, MongoGroup
@@ -23,7 +23,7 @@ async def connect_bank(message: Message):
     await BankConnection.budget.set()
     await message.answer(
         text=texts.SELECT_BANK_BUDGET,
-        reply_markup=available_budgets_keyboard(budgets),
+        reply_markup=options_keyboard(budgets),
 
     )
 

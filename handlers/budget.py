@@ -8,6 +8,7 @@ from keyboards.reply import (
     remove_keyboard,
     budget_types_keyboard,
     budget_rollover_keyboard,
+    options_keyboard,
 )
 from models import callbacks
 from models.core import Budget, BudgetType
@@ -19,6 +20,24 @@ from utils.redis import RedisBudget
 
 @dp.message_handler(text=texts.ADD_BUDGET, state='*')
 async def add_budget_function(message: Message):
+    groups = [
+        group.name for group in MongoGroup().get_by_member(message.from_user.id)
+    ]
+
+    await BudgetAdding.group.set()
+    await message.answer(
+        text=texts.ENTER_BUDGET_GROUP,
+        reply_markup=options_keyboard(groups),
+    )
+
+
+@dp.message_handler(state=BudgetAdding.group)
+async def add_budget_group(message: Message):
+    RedisBudget().add(
+        user_id=message.from_user.id,
+        key='group_id',
+        value=MongoGroup().get_by_name(message.text).id,
+    )
     await BudgetAdding.name.set()
     await message.answer(
         text=texts.ENTER_BUDGET_NAME,
@@ -80,7 +99,6 @@ async def add_budget_rollover(message: Message):
 
 
 async def adding_budget(message: Message):
-    group = MongoGroup().get_by_member(message.from_user.id)[0]  # TODO: workaround for solo user
     budget_content = RedisBudget().pop(message.from_user.id)
 
     budget = Budget(
@@ -89,7 +107,7 @@ async def adding_budget(message: Message):
         amount=float(budget_content['amount']),
         left=float(budget_content['amount']),
         rollover=budget_content.get('rollover', 'False') == 'True',
-        group_id=group.id,
+        group_id=MongoGroup().get_by_id(budget_content['group_id']).id,
     )
 
     MongoBudget().add(budget)
