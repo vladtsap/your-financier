@@ -144,6 +144,25 @@ class Categories(ExtendedEnum):
 
 
 @dataclass
+class Member:
+    id: int
+    name: str
+
+    @classmethod
+    def from_dict(cls, data: dict):
+        return cls(
+            id=data['id'],
+            name=data['name'],
+        )
+
+    def to_dict(self) -> dict:
+        return {
+            'id': self.id,
+            'name': self.name,
+        }
+
+
+@dataclass
 class Group:
     name: str
     members: List[int]
@@ -298,7 +317,7 @@ class Transaction:
 
     @property
     def message_view(self) -> str:
-        from utils.mongo import MongoBudget
+        from utils.mongo import MongoBudget, MongoMember
         budget = MongoBudget().get_by_id(self.budget_id)
 
         if self.outcome:
@@ -308,6 +327,7 @@ class Transaction:
 
         result += f'🗓 {self.date.day:02}.{self.date.month:02} {self.date.hour:02}:{self.date.minute:02}\n' \
                   f'💰 {budget.name}\n' \
+                  f'👤 {MongoMember().get_by_id(self.member_id).name}\n' \
                   f'🏷 {self.category.verbose_name}\n'
 
         if self.note:

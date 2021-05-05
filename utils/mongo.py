@@ -6,7 +6,7 @@ from bson import ObjectId
 from pytz import timezone
 
 from config import MONGO_URL
-from models.core import Singleton, Group, Budget, Transaction
+from models.core import Singleton, Group, Budget, Transaction, Member
 
 
 class MongoBase(metaclass=Singleton):
@@ -14,9 +14,31 @@ class MongoBase(metaclass=Singleton):
     def __init__(self):
         db_client = pymongo.MongoClient(MONGO_URL)
         db = db_client["financier"]
+        self.members = db["members"]
         self.groups = db["groups"]
         self.budgets = db["budgets"]
         self.transactions = db["transactions"]
+
+
+class MongoMember(MongoBase):
+
+    def add(self, member: Member):
+        return self.members.update_one(
+            {"id": member.id},
+            {"$set": member.to_dict()},
+            upsert=True,
+        ).upserted_id
+
+    def is_new(self, member: Member) -> bool:
+        return not bool(self.members.find_one(
+            {"id": member.id}
+        ))
+
+    def get_by_id(self, member_id: int) -> Member:
+        if member_content := self.members.find_one({"id": member_id}):
+            return Member.from_dict(member_content)
+        else:
+            return None  # TODO: raise exception
 
 
 class MongoGroup(MongoBase):
@@ -29,11 +51,6 @@ class MongoGroup(MongoBase):
             {"_id": ObjectId(group.id)},
             {"$addToSet": {"members": member_id}},
         )
-
-    def is_new(self, member_id: int) -> bool:
-        return not bool(list(self.groups.find(
-            {'members': [member_id]}  # TODO: add check for name too?
-        )))
 
     def get_by_id(self, group_id: str) -> Group:
         if group_content := self.groups.find_one({"_id": ObjectId(group_id)}):
