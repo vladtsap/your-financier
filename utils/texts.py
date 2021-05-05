@@ -45,6 +45,7 @@ MSG_BUDGET_TYPE = 'Тип'
 MSG_BUDGET_LEFT_PERIOD = 'До кінця періоду'
 MSG_BUDGET_LEFT_TODAY = 'На сьогодні'
 MSG_BUDGET_ROLLOUT = 'Перенесення'
+MSG_BUDGET_GROUP = 'Група'
 
 NO_BUDGETS = 'Зараз у тебе немає бюджетів'
 NO_TRANSACTIONS = 'Зараз у тебе немає транзакцій'

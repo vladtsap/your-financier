@@ -241,6 +241,7 @@ class Budget:
 
     @property
     def message_view(self) -> str:
+        from utils.mongo import MongoGroup
 
         result = f'💰 <b>{self.name}</b> — {self.amount:,.2f}₴\n' \
                  f'<b>{texts.MSG_BUDGET_TYPE}:</b> {self.type.verbose_name}\n' \
@@ -249,7 +250,8 @@ class Budget:
         if self.type != BudgetType.ONE_TIME:
             result += f'<b>{texts.MSG_BUDGET_LEFT_TODAY}:</b> {self.left_for_today:,.2f}₴\n'
 
-        result += f'<b>{texts.MSG_BUDGET_ROLLOUT}:</b> {"✅" if self.rollover else "❎"}'
+        result += f'<b>{texts.MSG_BUDGET_ROLLOUT}:</b> {"✅" if self.rollover else "❎"}\n' \
+                  f'<b>{texts.MSG_BUDGET_GROUP}:</b> {MongoGroup().get_by_id(self.group_id).name}\n'
 
         return result
 
