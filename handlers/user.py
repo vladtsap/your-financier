@@ -30,7 +30,7 @@ async def start_function(message: Message):
         )
 
     if invite_id := message.get_args():
-        group = MongoGroup().get_by_id(invite_id)
+        group = MongoGroup().get_by_id(invite_id)  # TODO: get ready for exception here
         MongoGroup().add_member(group, member_id)
 
     await MainStates.general.set()

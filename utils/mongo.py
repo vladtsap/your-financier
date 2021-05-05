@@ -27,12 +27,12 @@ class MongoGroup(MongoBase):
     def add_member(self, group: Group, member_id: int):
         self.groups.update_one(
             {"_id": ObjectId(group.id)},
-            {"$push": {"members": member_id}},
+            {"$addToSet": {"members": member_id}},
         )
 
     def is_new(self, member_id: int) -> bool:
         return not bool(list(self.groups.find(
-            {'members': [member_id]}
+            {'members': [member_id]}  # TODO: add check for name too?
         )))
 
     def get_by_id(self, group_id: str) -> Group:
@@ -44,7 +44,7 @@ class MongoGroup(MongoBase):
     def get_by_member(self, member_id: int) -> List[Group]:
         return [
             Group.from_dict(group_content)
-            for group_content in self.groups.find({"members": {"$in": [member_id]}})
+            for group_content in self.groups.find({"members": member_id})
         ]
 
     def get_by_name(self, name: str) -> Group:

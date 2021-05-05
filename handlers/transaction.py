@@ -76,7 +76,6 @@ async def add_budget_type(message: Message):
 
 @dp.message_handler(state=TransactionAdding.category)
 async def add_transaction_category(message: Message):
-    # TODO: clear keyboard
     try:
         category = Categories(message.text)
     except ValueError:
