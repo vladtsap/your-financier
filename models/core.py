@@ -187,6 +187,15 @@ class Group:
 
         return result
 
+    @property
+    def message_view(self) -> str:
+        from utils.mongo import MongoMember
+        result = f'<b>{texts.MSG_GROUP_NAME}</b>: {self.name}\n' \
+                 f'<b>{texts.MSG_GROUP_MEMBERS}</b>: ' \
+                 f'{", ".join([MongoMember().get_by_id(member_id).name for member_id in self.members])}'
+
+        return result
+
 
 @dataclass
 class Budget:

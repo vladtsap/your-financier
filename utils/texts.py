@@ -24,11 +24,14 @@ VIEW_TRANSACTIONS_OF_BUDGET = 'Транзакції 🧾'
 ADD_TRANSACTION_TO_BUDGET = '📤 Додати транзакцію'
 REMOVE_TRANSACTION = '🗑 Видалити'
 TRANSFER_INTO_ANOTHER_BUDGET = 'Перемістити ➡️'
+REMOVE_GROUP = '🗑 Видалити'
+GROUP_INVITE_LINK = 'Запросити 🤝'
 
 # callback answers
 BUDGET_REMOVED = 'Бюджет видалено'
 TRANSACTION_REMOVED = 'Транзакцію видалено'
 YOUR_TRANSACTIONS_OF_BUDGET = '👇 Ось транзакції бюджету:'
+GROUP_REMOVED = 'Групу видалено'
 
 # budget types
 WEEKLY = 'тижневий'
@@ -66,6 +69,10 @@ BANK_CONNECTED = "Банк успішно прив'язано"
 BANK_NOT_CONNECTED = "Сталася помилка при з'єдананні з банком"
 
 ENTER_GROUP_NAME = 'Введи назву новій групі'
+
+# group message view
+MSG_GROUP_NAME = 'Назва'
+MSG_GROUP_MEMBERS = 'Учасниики'
 
 # categories
 AUTO_CATEGORY = 'авто'

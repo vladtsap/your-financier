@@ -42,3 +42,20 @@ def transaction_keyboard(transaction_id: str) -> InlineKeyboardMarkup:
             ],
         ]
     )
+
+
+def group_keyboard(group_id: str) -> InlineKeyboardMarkup:
+    return InlineKeyboardMarkup(
+        inline_keyboard=[
+            [
+                InlineKeyboardButton(
+                    text=texts.REMOVE_GROUP,
+                    callback_data=callbacks.REMOVE_GROUP.format(group_id=group_id),
+                ),
+                InlineKeyboardButton(
+                    text=texts.GROUP_INVITE_LINK,
+                    callback_data=callbacks.GROUP_INVITE_LINK.format(group_id=group_id),
+                ),
+            ],
+        ]
+    )

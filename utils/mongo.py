@@ -6,7 +6,13 @@ from bson import ObjectId
 from pytz import timezone
 
 from config import MONGO_URL
-from models.core import Singleton, Group, Budget, Transaction, Member
+from models.core import (
+    Singleton,
+    Group,
+    Budget,
+    Transaction,
+    Member,
+)
 
 
 class MongoBase(metaclass=Singleton):
@@ -69,6 +75,9 @@ class MongoGroup(MongoBase):
             return Group.from_dict(group_content)
         else:
             return None  # TODO: raise exception
+
+    def remove(self, group_id: str):
+        self.groups.find_one_and_delete({"_id": ObjectId(group_id)})
 
 
 class MongoBudget(MongoBase):
