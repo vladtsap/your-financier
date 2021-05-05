@@ -72,7 +72,7 @@ ENTER_GROUP_NAME = 'Введи назву новій групі'
 
 # group message view
 MSG_GROUP_NAME = 'Назва'
-MSG_GROUP_MEMBERS = 'Учасниики'
+MSG_GROUP_MEMBERS = 'Учасники'
 
 # categories
 AUTO_CATEGORY = 'авто'

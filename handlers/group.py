@@ -40,10 +40,13 @@ async def creating_group(message: Message):
 @dp.message_handler(commands=['view_groups'], state='*')
 async def view_groups(message: Message):
     for group in MongoGroup().get_by_member(message.from_user.id):
-        await message.answer(
-            group.message_view,
-            reply_markup=group_keyboard(group.id)
-        )
+        if group.name == 'personal':
+            await message.answer(group.message_view)
+        else:
+            await message.answer(
+                group.message_view,
+                reply_markup=group_keyboard(group.id)
+            )
 
 
 @dp.callback_query_handler(Text(startswith=callbacks.REMOVE_GROUP[:2]), state='*')
