@@ -259,13 +259,12 @@ class Budget:
         from utils.mongo import MongoTransaction
 
         today_transactions = MongoTransaction().get_all_for_today_by_budget(self.id)
-        today_income = sum([transaction.income for transaction in today_transactions])
         today_outcome = sum([transaction.outcome for transaction in today_transactions])
 
-        left_before_today = self.left + today_outcome - today_income
+        left_before_today = self.left + today_outcome
         amount_per_day = left_before_today / self.days_left
 
-        return amount_per_day + today_income - today_outcome
+        return amount_per_day - today_outcome
 
     @property
     def message_view(self) -> str:
