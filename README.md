@@ -25,7 +25,6 @@ https://youtu.be/lsmeZ-hASbg
 
 ## Bugs
 - [ ] when adding transaction to _personal_, it search by name and adds to the first found budget by mistake
-- [ ] 
 
 
 ## Improvements
